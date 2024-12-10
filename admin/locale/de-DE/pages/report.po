@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "reportDesc"
+msgstr "Hier können Sie Serviceberichte erstellen. Serviceberichte enthalten nützliche Informationen für die "
+"Fehlerbehebung und erleichtern den Support von JTL-Shop.<br> Sie können Serviceberichte direkt über das Pfeil-Symbol "
+"herunterladen und an das Support-Ticket anhängen oder über das Link-Symbol einen "
+"Einmal-Link für den Support generieren."
+
+msgid "Report is not available"
+msgstr "Bericht ist nicht verfügbar"
+
+msgid "Report not found"
+msgstr "Bericht konnte nicht gefunden werden"
+
+msgid "Report file not found"
+msgstr "Berichtsdatei konnte nicht gefunden werden"
+
+msgid "Report authorized. Use the following one time link: %s"
+msgstr "Bericht authorisiert. Nutzen Sie den folgenden Einmal-Link:<br> %s"
+
+msgid "Download"
+msgstr "Download"
+
+msgid "Share"
+msgstr "Teilen"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Reports"
+msgstr "Berichte"
+
+msgid "File"
+msgstr "Datei"
+
+msgid "Remote IP"
+msgstr "Remote IP"
+
+msgid "Created"
+msgstr "Erstellt"
+
+msgid "Visited"
+msgstr "Aufgerufen"
+
+msgid "Valid until"
+msgstr "Gültig bis"
+
+msgid "Action"
+msgstr "Aktion"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Generate report"
+msgstr "Bericht erstellen"
+
+msgid "Report successfully created."
+msgstr "Bericht erfolgreich erstellt."
+
+msgid "Report could not be authorized: %s."
+msgstr "Bericht konnte nicht geteilt werden: %s."
+
+msgid "Report could not be not deleted: %s."
+msgstr "Bericht konnte nicht gelöscht werden: %s."
+
+msgid "Report could not be created: %s."
+msgstr "Bericht konnte nicht erstellt werden: %s."
+
+msgid "Could not write report data to file %s"
+msgstr "Konnte Berichtsdaten nicht in Datei %s schreiben"
+
+msgid "Directory %s could not be created"
+msgstr "Verzeichnis %s konnte nicht erstellt werden"
+
+msgid "Report successfully deleted."
+msgstr "Bericht erfolgreich gelöscht."

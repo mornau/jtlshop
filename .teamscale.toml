@@ -1,0 +1,3 @@
+version = "1.0"
+server.url = "https://jtl-software.teamscale.io/" # Optional, but must be set in the merged configuration
+project.id = "jtl-shop-core" # Optional, but must be set in the merged configuration

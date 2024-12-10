@@ -1,0 +1,8 @@
+@import "jquery-ui/dist/themes/base/jquery-ui.min.css";
+@import "bootstrap-fileinput/css/fileinput.min.css";
+@import "select2/dist/css/select2.min.css";
+@import "daterangepicker/daterangepicker.css";
+@import "bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css";
+@import "../../../node_modules/animate.css/animate.min.css";
+
+@import "./bootstrap-ladda.css";

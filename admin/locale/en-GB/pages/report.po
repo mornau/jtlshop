@@ -1,0 +1,77 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "reportDesc"
+msgstr "Here you can create service reports. Service reports contain useful information for troubleshooting "
+"and facilitate technical support for JTL-Shop. You can download service reports directly via the arrow icon and "
+"attach them to the support ticket or generate a one-time link via the link icon for the technical support."
+
+msgid "Report is not available"
+msgstr "Report is not available"
+
+msgid "Report not found"
+msgstr "Report not found"
+
+msgid "Report file not found"
+msgstr "Report file not found"
+
+msgid "Report authorized. Use the following one time link: %s"
+msgstr "Report authorized. Use the following one time link:<br> %s"
+
+msgid "Download"
+msgstr "Download"
+
+msgid "Share"
+msgstr "Share"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "File"
+msgstr "File"
+
+msgid "Remote IP"
+msgstr "Remote IP"
+
+msgid "Created"
+msgstr "Created"
+
+msgid "Visited"
+msgstr "Visited"
+
+msgid "Valid until"
+msgstr "Valid until"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Generate report"
+msgstr "Generate report"
+
+msgid "Report successfully created."
+msgstr "Report successfully created."
+
+msgid "Report could not be authorized: %s."
+msgstr "Report could not be authorized: %s."
+
+msgid "Report could not be not deleted: %s."
+msgstr "Report could not be not deleted: %s."
+
+msgid "Report could not be created: %s."
+msgstr "Report could not be created: %s."
+
+msgid "Could not write report data to file %s"
+msgstr "Could not write report data to file %s"
+
+msgid "Directory %s could not be created"
+msgstr "Directory %s could not be created"
+
+msgid "Report successfully deleted."
+msgstr "Report successfully deleted."

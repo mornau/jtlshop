@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @author fm
+ * @created Wed, 03 Apr 2019 15:31:00 +0100
+ */
+
+declare(strict_types=1);
+
+namespace JTL\Migrations;
+
+use JTL\Update\IMigration;
+use JTL\Update\Migration;
+
+/**
+ * Class Migration20190403153100
+ */
+class Migration20190403153100 extends Migration implements IMigration
+{
+    public function getAuthor(): string
+    {
+        return 'fm';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Remove old payment methods';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function up(): void
+    {
+        $methods = $this->getDB()->getObjects(
+            "SELECT * 
+                FROM tzahlungsart 
+                WHERE cModulId LIKE 'za_billpay%_jtl' 
+                    OR cModulId = 'za_sofortueberweisung_jtl'
+                    OR cModulId = 'za_wirecard_jtl'"
+        );
+        foreach ($methods as $method) {
+            $id = (int)$method->kZahlungsart;
+            $this->getDB()->delete('tzahlungsartsprache', 'kZahlungsart', $id);
+            $this->getDB()->delete('tzahlungsart', 'kZahlungsart', $id);
+            $this->getDB()->delete('tversandartzahlungsart', 'kZahlungsart', $id);
+        }
+        $this->execute("DELETE FROM tadminrecht WHERE cRecht = 'ORDER_BILLPAY_VIEW'");
+        $this->execute("DELETE FROM tadminrechtegruppe WHERE cRecht = 'ORDER_BILLPAY_VIEW'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'sofortueberweisungDesc'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName LIKE 'fundingAdvice%'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName LIKE 'safetypay%'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName LIKE 'saferpay%'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName LIKE 'paymentPartner%'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName LIKE 'heidelpay%'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName LIKE 'HPError-%'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'fromJust'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'checkoutPayment'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingTotal'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingRateTable'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingRateFactor'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingNotice'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingHoldback'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingIncludesProcessingFee'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingDuration'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingBorrowingRate'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financingAnnualRate'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'financing'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'postfinanceDesc'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'payWithHeidelpay'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'payWithClickpay'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'payWithPostfinance'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'payWithSofortueberweisung'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName LIKE 'uos%'");
+        $this->execute("DELETE FROM tsprachwerte WHERE bSystem = 1 AND cName = 'wirecardText'");
+        $this->execute("DELETE FROM tadminmenu WHERE cLinkname = 'Billpay' AND cRecht = 'ORDER_BILLPAY_VIEW'");
+        $this->execute(
+            "DELETE FROM teinstellungen 
+                WHERE cModulId LIKE 'za_billpay%_jtl' 
+                    OR cModulId = 'za_sofortueberweisung_jtl'
+                    OR cModulId = 'za_wirecard_jtl'"
+        );
+        $this->execute(
+            "DELETE FROM teinstellungenconf
+                WHERE cModulId LIKE 'za_billpay%_jtl' 
+                    OR cModulId = 'za_sofortueberweisung_jtl'
+                    OR cModulId = 'za_wirecard_jtl'"
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function down(): void
+    {
+        $this->execute(
+            "INSERT INTO `tadminrecht` 
+                (`cRecht`, `cBeschreibung`, `kAdminrechtemodul`) 
+                VALUES ('ORDER_BILLPAY_VIEW', 'Billpay', '5')"
+        );
+    }
+}
