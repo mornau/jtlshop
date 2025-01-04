@@ -26,7 +26,7 @@
     "jquery": "^3.7.1",
     "jquery-ui": "^1.13.2",
     "masonry-layout": "^4.2.2",
-    "moment": "2.29",
+    "moment": "2.30.1",
     "popper.js": "^1.16.1",
     "select2": "^4.0.6",
     "sticky-table-headers": "^0.1.24",
