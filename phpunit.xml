@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="false"
+         bootstrap="tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <!-- Disable E_USER_DEPRECATED until 3.0 -->
+        <!-- php -r 'echo -1 & ~E_USER_DEPRECATED;' -->
+        <ini name="error_reporting" value="-16385"/>
+    </php>
+    <coverage cacheDirectory="/coverageCache"
+              includeUncoveredFiles="true"
+              processUncoveredFiles="false"
+              pathCoverage="true"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="false">
+        <include>
+            <directory suffix=".php">includes/src</directory>
+        </include>
+    </coverage>
+</phpunit>
