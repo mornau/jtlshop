@@ -68,6 +68,7 @@ export class Iframe
 
         this.onPageLoad();
         this.gui.updatePagetreeBtn();
+        this.jq('#portletToolbar [title]').tooltip();
         opc.emit('iframe.init', this);
     }
 

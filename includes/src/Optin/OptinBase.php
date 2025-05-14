@@ -134,6 +134,9 @@ abstract class OptinBase extends OptinFactory
         if ($this->refData === null) {
             return;
         }
+        if ($this->dbHandler->select('toptin', 'kOptinCode', $optCode) !== null) {
+            return;
+        }
         $this->refData->setOptinClass(static::class); // save the caller
         $this->optCode       = $optCode;
         $newRow              = new stdClass();

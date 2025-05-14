@@ -1996,6 +1996,9 @@ class Artikel implements RoutableInterface
                 if ($mediaFile->cTyp === '.*') {
                     $extMatch = [];
                     \preg_match('/\.\w{3,4}($|\?)/', $mediaFile->cPfad, $extMatch);
+                    if (!isset($extMatch[0])) {
+                        \preg_match('/\.\w{3,4}($|\?)/', $mediaFile->cURL, $extMatch);
+                    }
                     $mediaFile->cTyp = $extMatch[0] ?? '.*';
                 }
                 $mapped                = $this->mapMediaType($mediaFile->cTyp);
@@ -4019,6 +4022,12 @@ class Artikel implements RoutableInterface
         if (!empty($abbr)) {
             $this->cGrundpreisEinheitName = UnitsOfMeasure::getPrintAbbreviation($this->cGrundpreisEinheitCode);
         }
+        if ((int)$this->fGewicht < 0) {
+            $this->fGewicht = '0';
+        }
+        if ((int)$this->fArtikelgewicht < 0) {
+            $this->fArtikelgewicht = '0';
+        }
         // short measurement unit e.g. "ml"
         $abbr = UnitsOfMeasure::getPrintAbbreviation($this->cMasseinheitCode);
         if (!empty($abbr)) {
@@ -4977,7 +4986,7 @@ class Artikel implements RoutableInterface
         if ($countryCode === null && isset($_SESSION['cLieferlandISO'])) {
             $countryCode = (string)$_SESSION['cLieferlandISO'];
         }
-        if ($this->fGewicht === null) {
+        if ($this->fGewicht === null || $this->fGewicht < 0) {
             $this->fGewicht = 0;
         }
         $hasProductShippingCost = $this->isUsedForShippingCostCalculation($countryCode) ? 'N' : 'Y';

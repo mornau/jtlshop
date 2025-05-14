@@ -364,31 +364,32 @@ class JTLSmarty extends Smarty
         return $res;
     }
 
-    protected function extendResource(string $resourceName, string $resourceCfbName, bool $transform): string
+    protected function extendResource(string $resourceName, string $customName, bool $transform): string
     {
         if ($this->context !== ContextType::FRONTEND) {
-            return $this->getResourceString($resourceCfbName, $transform);
+            return $this->getResourceString($customName, $transform);
         }
+        $cfbName = $customName;
         \executeHook(\HOOK_SMARTY_FETCH_TEMPLATE, [
             'original'  => &$resourceName,
-            'custom'    => &$resourceCustomName,
-            'fallback'  => &$resourceCustomName,
-            'out'       => &$resourceCfbName,
+            'custom'    => &$customName,
+            'fallback'  => &$customName,
+            'out'       => &$cfbName,
             'transform' => $transform
         ]);
-        if ($resourceName !== $resourceCfbName) {
-            return $this->getResourceString($resourceCfbName, $transform);
+        if ($resourceName !== $cfbName) {
+            return $this->getResourceString($cfbName, $transform);
         }
-        $extends = $this->getExtends($resourceCfbName);
+        $extends = $this->getExtends($cfbName);
         if (\count($extends) > 1) {
-            $transform       = false;
-            $resourceCfbName = \sprintf(
+            $transform = false;
+            $cfbName   = \sprintf(
                 'extends:%s',
                 \implode('|', $extends)
             );
         }
 
-        return $this->getResourceString($resourceCfbName, $transform);
+        return $this->getResourceString($cfbName, $transform);
     }
 
     /**

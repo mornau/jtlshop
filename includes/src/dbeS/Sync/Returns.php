@@ -253,10 +253,10 @@ final class Returns extends AbstractSync
         $langID = LanguageHelper::getDefaultLanguage()->id;
         $this->db->executeQuery('SET FOREIGN_KEY_CHECKS = 0');
         $this->db->executeQuery(
-            'TRUNCATE TABLE ' . $this->rmaReasonService->getLocalizationTableName()
+            'TRUNCATE TABLE ' . $this->rmaReasonService->RMAReasonLangRepository->getTableName()
         );
         $this->db->executeQuery(
-            'TRUNCATE TABLE ' . $this->rmaReasonService->getTableName()
+            'TRUNCATE TABLE ' . $this->rmaReasonService->RMAReasonRepository->getTableName()
         );
         $this->db->executeQuery('SET FOREIGN_KEY_CHECKS = 1');
 

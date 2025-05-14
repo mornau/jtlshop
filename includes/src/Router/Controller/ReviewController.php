@@ -53,9 +53,17 @@ class ReviewController extends PageController
             return $this->smarty->getResponse('productdetails/review_form.tpl');
         }
         try {
-            $product = (new Artikel($this->db, null, null, $this->cache))->fuelleArtikel($this->state->productID);
+            $cntrl = new ProductController(
+                $this->db,
+                $this->cache,
+                $this->state,
+                $this->config,
+                $this->alertService
+            );
+            $cntrl->init();
+            $cntrl->getResponse($request, $args, $smarty);
 
-            return new RedirectResponse($product?->cURLFull ?? $baseURL);
+            return new RedirectResponse($cntrl->currentProduct?->cURLFull ?? $baseURL);
         } catch (Exception) {
             return new RedirectResponse($baseURL);
         }

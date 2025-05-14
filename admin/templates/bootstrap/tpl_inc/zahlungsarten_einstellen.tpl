@@ -146,8 +146,22 @@
             {foreach $configItems as $cnf}
                 {if $cnf->isConfigurable()}
                     {if $hasBody === false}<div class="card-body">{assign var=hasBody value=true}{/if}
+                    {$localizedName=$cnf->getName()}
+                    {$localizedDesc=$cnf->getDescription()}
+                    {if preg_match('/_min_bestellungen$/', $cnf->getValueName())}
+                        {$localizedName=__('zahlungsart_min_bestellungen_name')}
+                        {$localizedDesc=__('zahlungsart_min_bestellungen_desc')}
+                    {elseif preg_match('/_min$/', $cnf->getValueName())}
+                        {$localizedName=__('zahlungsart_min_name')}
+                        {$localizedDesc=__('zahlungsart_min_desc')}
+                    {elseif preg_match('/_max$/', $cnf->getValueName())}
+                        {$localizedName=__('zahlungsart_max_name')}
+                        {$localizedDesc=__('zahlungsart_max_desc')}
+                    {/if}
                         <div class="form-group form-row align-items-center">
-                            <label class="col col-sm-4 col-form-label text-sm-right" for="{$cnf->getValueName()}">{$cnf->getName()}:</label>
+                            <label class="col col-sm-4 col-form-label text-sm-right" for="{$cnf->getValueName()}">
+                                {$localizedName}:
+                            </label>
                             <div class="col-sm pl-sm-3 pr-sm-5 order-last order-sm-2 {if $cnf->getInputType() === 'number'}config-type-number{/if}">
                             {if $cnf->getInputType() === 'selectbox'}
                                 <select name="{$cnf->getValueName()}" id="{$cnf->getValueName()}" class="custom-select combo">
@@ -182,7 +196,7 @@
                                 {/if}
                             {/if}
                             </div>
-                            <div class="col-auto ml-sm-n4 order-2 order-sm-3">{getHelpDesc cDesc=$cnf->getDescription()}</div>
+                            <div class="col-auto ml-sm-n4 order-2 order-sm-3">{getHelpDesc cDesc=$localizedDesc}</div>
                         </div>
                     {else}
                         <div class="card-header">

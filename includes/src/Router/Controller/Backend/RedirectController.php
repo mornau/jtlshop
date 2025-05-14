@@ -6,7 +6,7 @@ namespace JTL\Router\Controller\Backend;
 
 use JTL\Backend\Permissions;
 use JTL\CSV\Export;
-use JTL\CSV\Import;
+use JTL\CSV\RedirectImporter;
 use JTL\Helpers\Form;
 use JTL\Helpers\Request;
 use JTL\Helpers\Text;
@@ -67,7 +67,7 @@ class RedirectController extends AbstractBackendController
                     $this->actionImport();
                     break;
                 case 'csvExport':
-                    $this->actionExmport($filter, $pagination);
+                    $this->actionExport($filter, $pagination);
                     break;
                 case 'save':
                     $this->actionSave($redirects);
@@ -132,7 +132,7 @@ class RedirectController extends AbstractBackendController
      * @param Pagination $pagination
      * @return void
      */
-    private function actionExmport(Filter $filter, Pagination $pagination): void
+    private function actionExport(Filter $filter, Pagination $pagination): void
     {
         $redirectCount = Redirect::getRedirectCount($filter->getWhereSQL());
         $pagination->setItemCount($redirectCount)->assemble();
@@ -162,14 +162,12 @@ class RedirectController extends AbstractBackendController
 
     private function actionImport(): void
     {
-        $importer = new Import($this->db);
-        $importer->import('redirects', 'tredirect', [], null, Request::verifyGPCDataInt('importType'));
-        $errorCount = $importer->getErrorCount();
-        if ($errorCount > 0) {
-            $this->alertService->addError(
-                \__('errorImport') . '<br><br>' . \implode('<br>', $importer->getErrors()),
-                'errorImport'
-            );
+        $importer = new RedirectImporter($this->db);
+        $result   = $importer->runImport();
+
+        if ($result === false) {
+            $errors = $importer->getErrors();
+            $this->alertService->addError(\__('errorImport') . '<br><br>' . \implode('<br>', $errors), 'errorImport');
         } else {
             $this->alertService->addSuccess(\__('successImport'), 'successImport');
         }

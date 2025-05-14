@@ -626,6 +626,20 @@ class OrderHandler
             'suffix'  => &$suffix
         ]);
 
+        $nrLen = \mb_strlen($prefix . $orderNo);
+        if ($nrLen > 20) {
+            $prefix = \mb_substr($prefix, $nrLen - 20);
+            $suffix = '';
+            Shop::Container()->getLogService()->error(
+                'length of order number exceeds limit - prefix will be shortened'
+            );
+        } elseif ($nrLen + \mb_strlen($suffix) > 20) {
+            $suffix = \mb_substr($suffix, 0, 20 - $nrLen);
+            Shop::Container()->getLogService()->error(
+                'length of order number exceeds limit - suffix will be shortened'
+            );
+        }
+
         return $prefix . $orderNo . $suffix;
     }
 

@@ -48,6 +48,6 @@ class MultiJoin extends Join
             $subJoins .= ' ' . $join->getSQL();
         }
 
-        return $this->getComment() . $this->getType() . ' ' . '(' . $table . $subJoins . ')' . $on;
+        return $this->getType() . ' ' . '(' . $table . $subJoins . ')' . $on;
     }
 }

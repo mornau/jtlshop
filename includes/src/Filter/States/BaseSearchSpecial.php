@@ -185,7 +185,6 @@ class BaseSearchSpecial extends AbstractFilter
                 ->setType('JOIN')
                 ->setTable('tbestseller')
                 ->setOn('tbestseller.kArtikel = tartikel.kArtikel')
-                ->setComment('bestseller JOIN from ' . __METHOD__)
                 ->setOrigin(__CLASS__),
             \SEARCHSPECIALS_SPECIALOFFERS => $this->productFilter->hasPriceRangeFilter()
                 ? []
@@ -196,7 +195,6 @@ class BaseSearchSpecial extends AbstractFilter
                         'tasp.kArtikel = tartikel.kArtikel JOIN tsonderpreise AS tsp 
                                     ON tsp.kArtikelSonderpreis = tasp.kArtikelSonderpreis'
                     )
-                    ->setComment('special offers JOIN from ' . __METHOD__)
                     ->setOrigin(__CLASS__),
             \SEARCHSPECIALS_TOPREVIEWS    => $this->productFilter->hasRatingFilter()
                 ? []
@@ -204,7 +202,6 @@ class BaseSearchSpecial extends AbstractFilter
                     ->setType('JOIN')
                     ->setTable('tartikelext AS taex ')
                     ->setOn('taex.kArtikel = tartikel.kArtikel')
-                    ->setComment('top reviews JOIN from ' . __METHOD__)
                     ->setOrigin(__CLASS__),
             default                       => [],
         };

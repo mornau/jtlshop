@@ -24,6 +24,7 @@ use JTL\Shop;
 use JTL\Shopsetting;
 use JTL\TwoFA\FrontendTwoFA;
 use JTL\TwoFA\FrontendUserData;
+use JTL\TwoFA\TwoFAEmergency;
 use stdClass;
 
 use function Functional\select;
@@ -705,7 +706,7 @@ class Customer
     /**
      * @throws Exception
      */
-    public function prepareResetPassword(): bool
+    public function prepareResetPassword(bool $requestedByCustomer = true): bool
     {
         $cryptoService = Shop::Container()->getCryptoService();
         if (!$this->kKunde) {
@@ -733,9 +734,16 @@ class Customer
         $obj->cHash             = $key;
         $obj->neues_passwort    = 'Es ist leider ein Fehler aufgetreten. Bitte kontaktieren Sie uns.';
 
-        $mailer = Shop::Container()->getMailer();
-        $mail   = new Mail();
-        $mailer->send($mail->createFromTemplateID(\MAILTEMPLATE_PASSWORT_VERGESSEN, $obj));
+        $mailer     = Shop::Container()->getMailer();
+        $mail       = new Mail();
+        $sendResult = $mailer->send($mail->createFromTemplateID(\MAILTEMPLATE_PASSWORT_VERGESSEN, $obj));
+        if (
+            $requestedByCustomer === false
+            && $sendResult
+            && $this->has2FA()
+        ) {
+            $this->disable2FAandDeleteCodes();
+        }
 
         return true;
     }
@@ -1138,5 +1146,19 @@ class Customer
     public function isTwoFaAuthenticated(): bool
     {
         return $this->twoFaAuthenticated;
+    }
+
+    private function disable2FAandDeleteCodes(): void
+    {
+        $this->set2FASecret('');
+        $this->set2FAauth(0);
+        if ($this->updateInDB() > 0) {
+            (new TwoFAEmergency($this->db))->removeExistingCodes(
+                FrontendUserData::getByID(
+                    (int)$this->kKunde,
+                    $this->db
+                )
+            );
+        }
     }
 }

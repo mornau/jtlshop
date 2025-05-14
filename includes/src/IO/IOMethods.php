@@ -1494,9 +1494,10 @@ class IOMethods
         foreach ($languages as $i => $lang) {
             $languages[$i] = (object)$lang;
         }
+        $opc              = Shop::Container()->getOPC();
         $opcPageService   = Shop::Container()->getOPCPageService();
         $response         = new IOResponse();
-        $publicDraftkey   = $opcPageService->getPublicPage($curPageID)?->getKey() ?? 0;
+        $publicDraftkeys  = $opcPageService->getPublicPageKeys($curPageID);
         $newDraftListHtml = Shop::Smarty()
             ->assign('pageDrafts', $opcPageService->getDrafts($curPageID))
             ->assign('ShopURL', Shop::getURL())
@@ -1504,7 +1505,8 @@ class IOMethods
             ->assign('languages', $languages)
             ->assign('currentLanguage', (object)$currentLanguage)
             ->assign('opcPageService', $opcPageService)
-            ->assign('publicDraftKey', $publicDraftkey)
+            ->assign('opc', $opc)
+            ->assign('publicDraftKeys', $publicDraftkeys)
             ->assign('opcStartUrl', Shop::getAdminURL() . '/' . Route::OPC)
             ->fetch(\PFAD_ROOT . \PFAD_ADMIN . 'opc/tpl/draftlist.tpl');
 

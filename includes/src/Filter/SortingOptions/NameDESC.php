@@ -29,7 +29,6 @@ class NameDESC extends AbstractSortingOption
             $this->setOrderBy('tartikel.cName DESC');
         } else {
             $join = new Join();
-            $join->setComment('join from ' . __CLASS__ . ' for non-default language');
             $join->setType('LEFT JOIN');
             $join->setTable('tartikelsprache tass');
             $join->setOn('tass.kArtikel = tartikel.kArtikel');

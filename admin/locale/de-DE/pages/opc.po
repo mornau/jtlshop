@@ -66,6 +66,21 @@ msgstr "Blueprint-Name"
 msgid "Delete Blueprint?"
 msgstr "Blueprint löschen?"
 
+msgid "setDisplayWidthXS"
+msgstr "Viewport-Breite begrenzen auf 375px (XS)"
+
+msgid "setDisplayWidthSM"
+msgstr "Viewport-Breite begrenzen auf 577px (SM)"
+
+msgid "setDisplayWidthMD"
+msgstr "Viewport-Breite begrenzen auf 769px (MD)"
+
+msgid "setDisplayWidthLG"
+msgstr "Viewport-Breite begrenzen auf 993px (LG)"
+
+msgid "setDisplayWidthXL"
+msgstr "Viewport-Breite nicht begrenzen (XL)"
+
 # Config Tabs
 
 msgid "Styles"
@@ -277,6 +292,15 @@ msgstr "Zeitraum auswählen"
 
 msgid "indefinitePeriodOfTime"
 msgstr "Auf unbestimmte Zeit"
+
+msgid "restrictedToCustomerGroups"
+msgstr "Sichtbar für …"
+
+msgid "restrictedTo"
+msgstr "Sichtbar für"
+
+msgid "visibleForAllGroups"
+msgstr "Sichtbar für alle Kundengruppen"
 
 msgid "draftUpper"
 msgstr "ENTWURF"

@@ -25,12 +25,10 @@ class PriceASC extends AbstractSortingOption
         $this->setOrderBy('tpreisdetail.fVKNetto, tartikel.cName');
         $this->join = (new MultiJoin())->addJoin(
             (new Join())
-                ->setComment('subjoin for tpreis table')
                 ->setType('JOIN')
                 ->setTable('tpreisdetail')
                 ->setOn('tpreisdetail.kPreis = tpreis.kPreis AND tpreisdetail.nAnzahlAb = 0')
         )
-            ->setComment('join from SORT by price ASC')
             ->setType('JOIN')
             ->setTable('tpreis')
             ->setOn(

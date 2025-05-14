@@ -121,7 +121,6 @@ class Category extends BaseCategory
     {
         $join = (new Join())
             ->setOrigin(__CLASS__ . '::getSQLJoin')
-            ->setComment('join from ' . __METHOD__)
             ->setType('JOIN');
         if ($this->getConfig('navigationsfilter')['kategoriefilter_anzeigen_als'] === 'HF') {
             return $join->setTable(
@@ -172,7 +171,6 @@ class Category extends BaseCategory
             });
             if (\count($categoryJoins) === 0) {
                 $join = (new Join())
-                    ->setComment('join1 from ' . __METHOD__)
                     ->setType('JOIN')
                     ->setTable(
                         '(SELECT tkategorieartikel.kArtikel, oberkategorie.kOberKategorie, oberkategorie.kKategorie
@@ -189,7 +187,6 @@ class Category extends BaseCategory
                 $sql->addJoin($join);
             }
             $join = (new Join())
-                ->setComment('join2 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tkategorie')
                 ->setOn('tkategorie.kKategorie = tkategorieartikelgesamt.kKategorie')
@@ -198,7 +195,6 @@ class Category extends BaseCategory
         } else {
             if (!$this->productFilter->hasCategory()) {
                 $join = (new Join())
-                    ->setComment('join3 from ' . __METHOD__)
                     ->setType('JOIN')
                     ->setTable('tkategorieartikel')
                     ->setOn('tartikel.kArtikel = tkategorieartikel.kArtikel')
@@ -206,7 +202,6 @@ class Category extends BaseCategory
                 $sql->addJoin($join);
             }
             $join = (new Join())
-                ->setComment('join4 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tkategorie')
                 ->setOn('tkategorie.kKategorie = tkategorieartikel.kKategorie')
@@ -221,7 +216,6 @@ class Category extends BaseCategory
         }
         if (Shop::get('checkCategoryVisibility')) {
             $join = (new Join())
-                ->setComment('join5 from ' . __METHOD__)
                 ->setType('LEFT JOIN')
                 ->setTable('tkategoriesichtbarkeit')
                 ->setOn(
@@ -238,7 +232,6 @@ class Category extends BaseCategory
         } else {
             $select[] = "IF(tkategoriesprache.cName = '', tkategorie.cName, tkategoriesprache.cName) AS cName";
             $join     = (new Join())
-                ->setComment('join5 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tkategoriesprache')
                 ->setOn(

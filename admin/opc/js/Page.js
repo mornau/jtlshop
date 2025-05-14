@@ -57,14 +57,15 @@ export class Page
 
     async loadDraft()
     {
-        let pageData      = await this.io.getDraft(this.key);
-        this.id           = pageData.id;
-        this.name         = pageData.name;
-        this.publishFrom  = pageData.publishFrom ? this.decodeDate(pageData.publishFrom) : null;
-        this.publishTo    = pageData.publishTo ? this.decodeDate(pageData.publishTo) : null;
-        this.url          = pageData.url;
-        this.lastModified = pageData.lastModified;
-        this.fullUrl      = this.shopUrl + this.url;
+        let pageData        = await this.io.getDraft(this.key);
+        this.id             = pageData.id;
+        this.name           = pageData.name;
+        this.publishFrom    = pageData.publishFrom ? this.decodeDate(pageData.publishFrom) : null;
+        this.publishTo      = pageData.publishTo ? this.decodeDate(pageData.publishTo) : null;
+        this.url            = pageData.url;
+        this.lastModified   = pageData.lastModified;
+        this.customerGroups = pageData.customerGroups;
+        this.fullUrl        = this.shopUrl + this.url;
     }
 
     async loadDraftPreview()
@@ -137,6 +138,7 @@ export class Page
             publishFrom: this.publishFrom ? this.encodeDate(this.publishFrom) : null,
             publishTo: this.publishTo ? this.encodeDate(this.publishTo) : null,
             name: this.name,
+            customerGroups: this.customerGroups,
         });
     }
 
@@ -200,7 +202,13 @@ export class Page
 
     exportAsDownload()
     {
-        download(JSON.stringify(this), this.name + '.json', 'application/json');
+        let json = JSON.stringify(this.toJSON());
+        let file = new File([json], this.name + '.json', { type: 'application/json' });
+        let url  = URL.createObjectURL(file);
+        let link = document.createElement('a');
+        link.download = file.name;
+        link.href = url;
+        link.click();
     }
 
     clear()

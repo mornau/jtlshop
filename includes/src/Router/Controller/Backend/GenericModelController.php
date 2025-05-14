@@ -118,7 +118,7 @@ abstract class GenericModelController extends AbstractBackendController
         $this->setMessages();
 
         $models     = $this->modelClass::loadAll($this->db, [], []);
-        $pagination = (new Pagination($template))
+        $pagination = (new Pagination(\pathinfo($template, \PATHINFO_FILENAME)))
             ->setItemCount($models->count())
             ->assemble();
 

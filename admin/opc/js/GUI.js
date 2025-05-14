@@ -114,6 +114,15 @@ export class GUI
 
             this.updateBlueprintList();
             this.updateRevisionList();
+
+            $(window.opcSidebar).find('[title]').tooltip();
+
+            $(window.configModal).on('shown.bs.modal', () => {
+                $(window.configModal).find('[title]').tooltip();
+            });
+            $(window.configModal).on('hidden.bs.modal', () => {
+                $(window.configModal).find('[title]').tooltip('dispose');
+            });
         }
     }
 
@@ -205,6 +214,10 @@ export class GUI
         });
 
         this.updateDynamicGui();
+
+        $(window.blueprintList).find('[title]').tooltip({
+            'container': 'body',
+        });
     }
 
     async updateRevisionList()
@@ -632,6 +645,18 @@ export class GUI
             this.setPublishNow();
         }
 
+        $('#customerGroups input[type=checkbox]').prop('checked', false);
+
+        if (this.page.customerGroups && this.page.customerGroups.length) {
+            window.checkAllCustomerGroups.checked = false;
+
+            for (let groupID of this.page.customerGroups) {
+                $('#customerGroup' + groupID).prop('checked', true);
+            }
+        } else {
+            window.checkAllCustomerGroups.checked = true;
+        }
+
         window.draftName.value = this.page.name;
         $(window.publishModal).modal('show');
     }
@@ -653,6 +678,24 @@ export class GUI
             this.setInfiniteSchedule();
         } else {
             this.unsetInfiniteSchedule();
+        }
+    }
+
+    onChangeCheckAllCustomerGroups()
+    {
+        if (window.checkAllCustomerGroups.checked) {
+            $('#customerGroups input[type=checkbox]').prop('checked', false);
+        } else {
+            window.checkAllCustomerGroups.checked = true;
+        }
+    }
+
+    onChangeCheckCustomerGroup()
+    {
+        if ($('#customerGroups input[type=checkbox]:checked').length > 0) {
+            window.checkAllCustomerGroups.checked = false;
+        } else {
+            window.checkAllCustomerGroups.checked = true;
         }
     }
 
@@ -733,13 +776,33 @@ export class GUI
             this.page.publishTo = window.publishTo.value;
         }
 
+        if (window.checkAllCustomerGroups.checked) {
+            this.page.customerGroups = null;
+        } else {
+            this.page.customerGroups = [];
+
+            for (let checkbox of window.customerGroups.querySelectorAll('input[type=checkbox]')) {
+                if (checkbox.checked) {
+                    this.page.customerGroups.push(parseInt(checkbox.value));
+                }
+            }
+        }
+
         try {
             await this.page.publicate();
         } catch (er) {
             return await this.showError(er.error.message);
         }
 
-        this.io.getDraftStatusHtml(this.page.key);
+        let result = await this.io.getDraftStatusHtml(this.page.key);
+        if (result.domAssigns) {
+            for (const assign of result.domAssigns) {
+                let $item = $('#' + assign.target)
+                if ($item.length > 0) {
+                    $item[0][assign.attr] = assign.data;
+                }
+            }
+        }
 
         if (this.isPageUnsaved()) {
             this.savePage();

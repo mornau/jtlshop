@@ -320,6 +320,16 @@ class PortletInstance implements \JsonSerializable
         return $this;
     }
 
+    protected function setBoxStyles(): void
+    {
+        foreach ($this->getProperty('box-styles') as $styleName => $styleValue) {
+            if (\preg_match('/^(\d*\.)?\d+$/', $styleValue)) {
+                $styleValue .= 'px';
+            }
+            $this->setStyle($styleName, $styleValue);
+        }
+    }
+
     /**
      * @return array<mixed>
      */
@@ -330,9 +340,7 @@ class PortletInstance implements \JsonSerializable
                 continue;
             }
             if ($propname === 'box-styles') {
-                foreach ($this->getProperty($propname) as $styleName => $styleValue) {
-                    $this->setStyle($styleName, $styleValue);
-                }
+                $this->setBoxStyles();
             } elseif ($propname !== 'custom-class' && !\str_starts_with($propname, 'hidden-')) {
                 $this->setStyle($propname, $this->getProperty($propname));
             }
@@ -390,16 +398,7 @@ class PortletInstance implements \JsonSerializable
             if ($styleValue === '') {
                 continue;
             }
-            if (
-                \mb_stripos($styleName, 'margin-') === 0
-                || \mb_stripos($styleName, 'padding-') === 0
-                || \mb_stripos($styleName, '-width') !== false
-                || \mb_stripos($styleName, '-height') !== false
-            ) {
-                $styleString .= $styleName . ':' . \htmlspecialchars($styleValue, \ENT_QUOTES) . 'px; ';
-            } else {
-                $styleString .= $styleName . ':' . \htmlspecialchars($styleValue, \ENT_QUOTES) . '; ';
-            }
+            $styleString .= $styleName . ':' . \htmlspecialchars($styleValue, \ENT_QUOTES) . '; ';
         }
 
         return $styleString;

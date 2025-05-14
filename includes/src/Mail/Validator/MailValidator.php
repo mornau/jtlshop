@@ -7,7 +7,6 @@ namespace JTL\Mail\Validator;
 use JTL\DB\DbInterface;
 use JTL\Mail\Mail\MailInterface;
 use JTL\Mail\Template\Model;
-use stdClass;
 
 /**
  * Class MailValidator
@@ -15,8 +14,9 @@ use stdClass;
  */
 final class MailValidator implements ValidatorInterface
 {
+    private const ERR_DIVIDER = "\n---------------------------\n";
+
     /**
-     * MailValidator constructor.
      * @param DbInterface $db
      * @param array       $config
      */
@@ -24,31 +24,55 @@ final class MailValidator implements ValidatorInterface
     {
     }
 
-    /**
-     * @param MailInterface $mail
-     * @return bool
-     */
     public function validate(MailInterface $mail): bool
     {
-        $model     = $mail->getTemplate()?->getModel();
-        $activated = $model === null || $this->isTemplateActivated($model);
+        $model = $mail->getTemplate()?->getModel();
+        if ($model === null) {
+            return true;
+        }
+        $mailIsValid = true;
+        $errText     = self::ERR_DIVIDER;
+        if ($mail->getTemplate() !== null) {
+            if ($this->isTemplateActivated($model) === false) {
+                $mailIsValid = false;
+                $errText     .= 'Please activate the corresponding email template ('
+                    . $mail->getTemplate()->getID()
+                    . ").\nTo do this, go to\nAdministration > Email > Templates\nin the back end of JTL-Shop.\n"
+                    . 'Click the pen icon to open the template for editing and select -Yes- for -Send email-.'
+                    . self::ERR_DIVIDER;
+            }
+            if ($this->checkBody($mail) === false) {
+                $mailIsValid = false;
+                $errText     .= 'Please enter a content for the corresponding email template ('
+                    . $mail->getTemplate()->getID() . "). To do this, go to\nAdministration > Email > Templates\n"
+                    . 'in the back end of JTL-Shop and use the pen icon to open the email template for editing.'
+                    . self::ERR_DIVIDER;
+            }
+            if ($this->isBlacklisted($mail->getToMail())) {
+                $mailIsValid = false;
+                $errText     .= 'Tried to send an email using template -'
+                    . $mail->getTemplate()->getID() . '- to -' . $mail->getToMail() . "-\n"
+                    . "The recipient of the email is on the email blacklist.\n"
+                    . "You can view the email blacklist in the back end of JTL-Shop at\n"
+                    . 'Administration > Email > Blacklist'
+                    . self::ERR_DIVIDER;
+            }
+        } else {
+            $mailIsValid = false;
+            $errText     .= "Tried to send an email, but corresponding template is missing.\n" . self::ERR_DIVIDER;
+        }
+        if ($mailIsValid === false) {
+            $mail->setError($errText);
+        }
 
-        return $activated && $this->checkBody($mail) === true && !$this->isBlacklisted($mail->getToMail());
+        return $mailIsValid;
     }
 
-    /**
-     * @param MailInterface $mail
-     * @return bool
-     */
     public function checkBody(MailInterface $mail): bool
     {
         return \mb_strlen($mail->getBodyHTML()) > 0 || \mb_strlen($mail->getBodyText()) > 0;
     }
 
-    /**
-     * @param string $email
-     * @return bool
-     */
     public function isBlacklisted(string $email): bool
     {
         if ($this->config['emailblacklist']['blacklist_benutzen'] !== 'Y') {
@@ -58,19 +82,15 @@ final class MailValidator implements ValidatorInterface
         if ($blackList === null || empty($blackList->cEmail)) {
             return false;
         }
-        $block                = new stdClass();
-        $block->cEmail        = $blackList->cEmail;
-        $block->dLetzterBlock = 'NOW()';
-
+        $block = (object)[
+            'cEmail'        => $blackList->cEmail,
+            'dLetzterBlock' => 'NOW()'
+        ];
         $this->db->insert('temailblacklistblock', $block);
 
         return true;
     }
 
-    /**
-     * @param Model $model
-     * @return bool
-     */
     public function isTemplateActivated(Model $model): bool
     {
         return $model->getActive() === true;

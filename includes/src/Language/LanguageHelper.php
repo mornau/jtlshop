@@ -318,28 +318,33 @@ class LanguageHelper
 
     private function initLangData(): void
     {
-        $data = $this->cache->get('lng_dta_lst', function ($cache, $cacheID, &$content, &$tags): bool {
-            $content = $this->db->getCollection(
+        $data = $this->cache->get('jtl_lng_dta_lst');
+        if ($data === false) {
+            $data = $this->db->getCollection(
                 'SELECT tsprache.*, tsprachiso.kSprachISO FROM tsprache 
                     LEFT JOIN tsprachiso
                         ON tsprache.cISO = tsprachiso.cISO
                     ORDER BY tsprache.kSprache ASC'
-            );
-            $tags    = [\CACHING_GROUP_LANGUAGE];
+            )->map(function (stdClass $el): stdClass {
+                $el->kSprache   = (int)$el->kSprache;
+                $el->kSprachISO = (int)$el->kSprachISO;
+                $el->active     = (int)$el->active;
 
-            return true;
-        });
+                return $el;
+            });
+            $this->cache->set('jtl_lng_dta_lst', $data, [\CACHING_GROUP_LANGUAGE]);
+        }
         /** @var Collection $data */
         $this->availableLanguages = $data->map(static function (stdClass $e): stdClass {
-            return (object)['kSprache' => (int)$e->kSprache];
+            return (object)['kSprache' => $e->kSprache];
         })->toArray();
 
         $this->byISO = $data->groupBy('cISO')->transform(static function (Collection $e): stdClass {
             $e = $e->first();
 
             return (object)[
-                'kSprachISO' => (int)$e->kSprachISO,
-                'kSprache'   => (int)$e->kSprache,
+                'kSprachISO' => $e->kSprachISO,
+                'kSprache'   => $e->kSprache,
                 'cISO'       => $e->cISO
             ];
         })->toArray();

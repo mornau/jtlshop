@@ -33,6 +33,11 @@ class DB
     protected PluginLoader $pluginLoader;
 
     /**
+     * @var array|null
+     */
+    protected ?array $allCustomerGroups = null;
+
+    /**
      * DB constructor.
      * @param DbInterface       $shopDB
      * @param JTLCacheInterface $cache
@@ -336,5 +341,19 @@ class DB
         $plugin = $this->pluginLoader->init((int)$inputDB->plugin_id);
 
         return $plugin->getPaths()->getBasePath() . 'portlet_input_types/' . $parts[1] . '.tpl';
+    }
+
+    /**
+     * @return object[]
+     */
+    public function getCustomerGroups(): array
+    {
+        if ($this->allCustomerGroups === null) {
+            $this->allCustomerGroups = $this->shopDB->getObjects(
+                'SELECT kKundengruppe AS id, cName AS name FROM tkundengruppe'
+            );
+        }
+
+        return $this->allCustomerGroups;
     }
 }

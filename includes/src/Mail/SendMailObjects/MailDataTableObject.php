@@ -263,9 +263,9 @@ class MailDataTableObject extends AbstractDataObject implements DataTableObjectI
         return $this;
     }
 
-    public function getReplyToMail(): string
+    public function getReplyToMail(): ?string
     {
-        return $this->replyToMail;
+        return $this->replyToMail ?? $this->fromMail;
     }
 
     public function setReplyToMail(?string $replyToMail): self
@@ -277,7 +277,7 @@ class MailDataTableObject extends AbstractDataObject implements DataTableObjectI
 
     public function getReplyToName(): string
     {
-        return $this->replyToName;
+        return $this->replyToName ?? $this->fromName;
     }
 
     public function setReplyToName(?string $replyToName): self

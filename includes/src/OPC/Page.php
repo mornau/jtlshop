@@ -68,6 +68,11 @@ class Page implements \JsonSerializable
     protected ?string $lockedAt = null;
 
     /**
+     * @var array|null
+     */
+    protected ?array $customerGroups = null;
+
+    /**
      * @var AreaList
      */
     protected AreaList $areaList;
@@ -290,6 +295,25 @@ class Page implements \JsonSerializable
     }
 
     /**
+     * @return array|null
+     */
+    public function getCustomerGroups(): ?array
+    {
+        return $this->customerGroups;
+    }
+
+    /**
+     * @param array|null $customerGroups
+     * @return $this
+     */
+    public function setCustomerGroups(?array $customerGroups): self
+    {
+        $this->customerGroups = $customerGroups;
+
+        return $this;
+    }
+
+    /**
      * @return AreaList
      */
     public function getAreaList(): AreaList
@@ -309,28 +333,28 @@ class Page implements \JsonSerializable
     }
 
     /**
-     * @param int $publicDraftKey
+     * @param int[]|null $publicDraftKeys
      * @return int
      */
-    public function getStatus(int $publicDraftKey): int
+    public function getStatus(?array $publicDraftKeys = []): int
     {
-        $now   = \date('Y-m-d H:i:s');
-        $start = $this->getPublishFrom();
-        $end   = $this->getPublishTo();
+        $now  = \date('Y-m-d H:i:s');
+        $from = $this->getPublishFrom();
+        $to   = $this->getPublishTo();
 
-        if (!empty($start) && $now >= $start && (empty($end) || $now < $end)) {
-            if ($publicDraftKey === 0 || $this->getKey() === $publicDraftKey) {
+        if (!empty($from) && $now >= $from && (empty($to) || $now < $to)) {
+            if (empty($publicDraftKeys) || \in_array($this->getKey(), $publicDraftKeys)) {
                 return 0; // public
             }
             return 1; // planned
         }
-        if (!empty($start) && $now < $start) {
+        if (!empty($from) && $now < $from) {
             return 1; // planned
         }
-        if (empty($start)) {
+        if (empty($from)) {
             return 2; // draft
         }
-        if (!empty($end) && $now > $end) {
+        if (!empty($to) && $now > $to) {
             return 3; // backdate
         }
 
@@ -392,6 +416,7 @@ class Page implements \JsonSerializable
         $this->setName($data['name'] ?? $this->getName());
         $this->setUrl($data['url'] ?? $this->getUrl());
         $this->setRevId($data['revId'] ?? $this->getRevId());
+        $this->setCustomerGroups($data['customerGroups'] ?? $this->getCustomerGroups());
 
         if (GeneralObject::isCountable('areas', $data)) {
             $this->getAreaList()->deserialize($data['areas']);
@@ -406,17 +431,18 @@ class Page implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'key'          => $this->getKey(),
-            'id'           => $this->getId(),
-            'publishFrom'  => $this->getPublishFrom(),
-            'publishTo'    => $this->getPublishTo(),
-            'name'         => $this->getName(),
-            'revId'        => $this->getRevId(),
-            'url'          => $this->getUrl(),
-            'lastModified' => $this->getLastModified(),
-            'lockedBy'     => $this->getLockedBy(),
-            'lockedAt'     => $this->getLockedAt(),
-            'areaList'     => $this->getAreaList()->jsonSerialize(),
+            'key'            => $this->getKey(),
+            'id'             => $this->getId(),
+            'publishFrom'    => $this->getPublishFrom(),
+            'publishTo'      => $this->getPublishTo(),
+            'name'           => $this->getName(),
+            'revId'          => $this->getRevId(),
+            'url'            => $this->getUrl(),
+            'lastModified'   => $this->getLastModified(),
+            'lockedBy'       => $this->getLockedBy(),
+            'lockedAt'       => $this->getLockedAt(),
+            'areaList'       => $this->getAreaList()->jsonSerialize(),
+            'customerGroups' => $this->getCustomerGroups(),
         ];
     }
 }

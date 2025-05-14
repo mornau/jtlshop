@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
 use JsonException;
+use JTL\Cache\JTLCacheInterface;
 use JTL\Services\JTL\AlertServiceInterface;
 use JTL\Shop;
 
@@ -30,57 +31,65 @@ class Manager
 
     private const API_LIVE_URL = 'https://checkout.jtl-software.com/v1/recommendations';
 
-    /**
-     * @var Client
-     */
     private Client $client;
 
     /**
-     * @var Collection<Recommendation>
+     * @var Collection<int, Recommendation>
      */
     private Collection $recommendations;
 
-    /**
-     * Manager constructor.
-     * @param AlertServiceInterface $alertService
-     * @param string                $scope
-     */
-    public function __construct(private readonly AlertServiceInterface $alertService, private readonly string $scope)
-    {
+    private JTLCacheInterface $cache;
+
+    public function __construct(
+        private readonly AlertServiceInterface $alertService,
+        private readonly string $scope,
+        ?JTLCacheInterface $cache = null
+    ) {
         $this->client          = new Client();
         $this->recommendations = new Collection();
-        $this->setRecommendations();
+        $this->cache           = $cache ?? Shop::Container()->getCache();
     }
 
-    /**
-     *
-     */
     public function setRecommendations(): void
     {
         foreach ($this->getJSONFromAPI($this->getScope()) as $recommendation) {
             $this->recommendations->push(new Recommendation($recommendation));
         }
+        if ($this->recommendations->isNotEmpty()) {
+            $this->cache->set(
+                $this->getCacheID(),
+                $this->recommendations,
+                [\CACHING_GROUP_RECOMMENDATIONS]
+            );
+        }
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Recommendation>
      */
     public function getRecommendations(): Collection
     {
+        $recommendations = $this->cache->get($this->getCacheID());
+        if ($recommendations instanceof Collection) {
+            $this->recommendations = $recommendations;
+        }
+        if ($this->recommendations->isEmpty()) {
+            $this->setRecommendations();
+        }
+
         return $this->recommendations;
     }
 
-    /**
-     * @param string $id
-     * @param bool   $showAlert
-     * @return Recommendation|null
-     */
     public function getRecommendationById(string $id, bool $showAlert = true): ?Recommendation
     {
-        /** @var Recommendation|null $recommendation */
-        $recommendation = $this->recommendations->first(static function (Recommendation $e) use ($id): bool {
-            return $e->getId() === $id;
-        });
+        if ($this->recommendations->isEmpty()) {
+            $this->getRecommendations();
+        }
+        $recommendation = $this->recommendations->first(
+            static function (Recommendation $recommendation) use ($id): bool {
+                return $recommendation->getId() === $id;
+            }
+        );
         if ($recommendation === null && $showAlert) {
             $this->alertService->addWarning(\__('noRecommendationFound'), 'noRecommendationFound');
         }
@@ -89,7 +98,6 @@ class Manager
     }
 
     /**
-     * @param string $scope
      * @return \stdClass[]
      * @throws GuzzleException
      * @throws JsonException
@@ -106,7 +114,8 @@ class Manager
                         'Accept'       => 'application/json',
                         'Content-Type' => 'application/json',
                     ],
-                    'verify'  => true
+                    'verify'  => true,
+                    'timeout' => \CURL_TIMEOUT_IN_SECONDS
                 ]
             );
         } catch (Exception $e) {
@@ -114,14 +123,23 @@ class Manager
             Shop::Container()->getLogService()->error($e->getMessage());
         }
 
-        return $res === null ? [] : \json_decode((string)$res->getBody(), false, 512, \JSON_THROW_ON_ERROR)->extensions;
+        return $res === null
+            ? []
+            : \json_decode(
+                (string)$res->getBody(),
+                false,
+                512,
+                \JSON_THROW_ON_ERROR
+            )->extensions;
     }
 
-    /**
-     * @return string
-     */
     public function getScope(): string
     {
         return $this->scope;
+    }
+
+    private function getCacheID(): string
+    {
+        return 'recommendations_' . $this->getScope();
     }
 }

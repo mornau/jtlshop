@@ -242,7 +242,6 @@ class SearchSpecial extends AbstractFilter
                         ->setType($joinType)
                         ->setTable('tbestseller')
                         ->setOn('tbestseller.kArtikel = tartikel.kArtikel')
-                        ->setComment('bestseller JOIN from ' . __METHOD__)
                         ->setOrigin(__CLASS__);
                     break;
 
@@ -255,13 +254,11 @@ class SearchSpecial extends AbstractFilter
                             ->setType($joinType)
                             ->setTable('tartikelsonderpreis AS tasp')
                             ->setOn('tasp.kArtikel = tartikel.kArtikel')
-                            ->setComment('special offers JOIN from ' . __METHOD__)
                             ->setOrigin(__CLASS__);
                         $joins[] = (new Join())
                             ->setType($joinType)
                             ->setTable('tsonderpreise AS tsp')
                             ->setOn('tsp.kArtikelSonderpreis = tasp.kArtikelSonderpreis')
-                            ->setComment('special offers JOIN2 from ' . __METHOD__)
                             ->setOrigin(__CLASS__);
                     }
                     break;
@@ -275,7 +272,6 @@ class SearchSpecial extends AbstractFilter
                             ->setType($joinType)
                             ->setTable('tartikelext AS taex ')
                             ->setOn('taex.kArtikel = tartikel.kArtikel')
-                            ->setComment('top reviews JOIN from ' . __METHOD__)
                             ->setOrigin(__CLASS__);
                     }
                     break;
@@ -334,7 +330,6 @@ class SearchSpecial extends AbstractFilter
 
                     $state->addJoin(
                         (new Join())
-                            ->setComment('bestseller JOIN from ' . __METHOD__)
                             ->setType('JOIN')
                             ->setTable('tbestseller')
                             ->setOn('tbestseller.kArtikel = tartikel.kArtikel')
@@ -346,7 +341,6 @@ class SearchSpecial extends AbstractFilter
                     $name = Shop::Lang()->get('specialOffer');
                     $state->addJoin(
                         (new Join())
-                            ->setComment('special offer JOIN1 from ' . __METHOD__)
                             ->setType('JOIN')
                             ->setTable('tartikelsonderpreis')
                             ->setOn('tartikelsonderpreis.kArtikel = tartikel.kArtikel')
@@ -354,7 +348,6 @@ class SearchSpecial extends AbstractFilter
                     );
                     $state->addJoin(
                         (new Join())
-                            ->setComment('special offer JOIN2 from ' . __METHOD__)
                             ->setType('JOIN')
                             ->setTable('tsonderpreise')
                             ->setOn('tsonderpreise.kArtikelSonderpreis = tartikelsonderpreis.kArtikelSonderpreis')
@@ -399,7 +392,6 @@ class SearchSpecial extends AbstractFilter
                     if (!$this->productFilter->hasRatingFilter()) {
                         $state->addJoin(
                             (new Join())
-                                ->setComment('top reviews JOIN from ' . __METHOD__)
                                 ->setType('JOIN')
                                 ->setTable('tartikelext')
                                 ->setOn('tartikelext.kArtikel = tartikel.kArtikel')

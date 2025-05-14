@@ -15,6 +15,20 @@ use stdClass;
 abstract class AbstractDataObject implements DataObjectInterface
 {
     /**
+     * as long as our database provides german column identifiers it is recommended to provide
+     * two mapping arrays:
+     * private array $mapping: to map the identifiers used in the code to the identifiers inside the DTO
+     *      $mapping = [
+     *              <someIdentifier> => <DTOPropertyIdentifier>
+     *                  ];
+     * private array $columnMapping: to map the DTO property names  to the column identifiers in the database
+     *      $columnMapping = [
+     *              <columnIdentifier> => <DTOPropertyIdentifier>
+     *                  ];
+     *
+     */
+
+    /**
      * @inheritdoc
      */
     abstract public function getMapping(): array;
@@ -86,6 +100,36 @@ abstract class AbstractDataObject implements DataObjectInterface
     ];
 
     /**
+     * @param ReflectionProperty $property
+     * @param bool               $dismissNull
+     * @param bool               $serialize
+     * @param array              $toArray
+     * @param string             $propertyName
+     * @return array
+     */
+    public function fillArray(
+        ReflectionProperty $property,
+        bool $dismissNull,
+        bool $serialize,
+        array $toArray,
+        string $propertyName
+    ): array {
+        if ($dismissNull === true && $property->getValue($this) === null) {
+            return $toArray;
+        }
+        if (
+            $serialize === true
+            && (\is_array($property->getValue($this)) || \is_object($property->getValue($this)))
+        ) {
+            $toArray[$propertyName] = \serialize($property->getValue($this));
+        } else {
+            $toArray[$propertyName] = $property->getValue($this);
+        }
+
+        return $toArray;
+    }
+
+    /**
      * @param bool|int|string $value
      * @return bool
      */
@@ -142,7 +186,7 @@ abstract class AbstractDataObject implements DataObjectInterface
     /**
      * @inheritdoc
      */
-    public function toArray(bool $tableColumns = true, bool $serialize = true): array
+    public function toArray(bool $tableColumns = true, bool $serialize = true, bool $dismissNull = false): array
     {
         $columnMap = [];
         if ($tableColumns === true && \method_exists($this, 'getColumnMapping')) {
@@ -160,17 +204,10 @@ abstract class AbstractDataObject implements DataObjectInterface
             ) {
                 continue;
             }
-            if ($tableColumns) {
+            if ($tableColumns && \array_key_exists($propertyName, $columnMap)) {
                 $propertyName = $columnMap[$propertyName];
             }
-            if (
-                $serialize === true
-                && (\is_array($property->getValue($this)) || \is_object($property->getValue($this)))
-            ) {
-                $toArray[$propertyName] = \serialize($property->getValue($this));
-            } else {
-                $toArray[$propertyName] = $property->getValue($this);
-            }
+            $toArray = $this->fillArray($property, $dismissNull, $serialize, $toArray, $propertyName);
         }
 
         return $toArray;
@@ -179,8 +216,8 @@ abstract class AbstractDataObject implements DataObjectInterface
     /**
      * @inheritdoc
      */
-    public function toObject(bool $tableColumns = true): stdClass
+    public function toObject(bool $tableColumns = true, $dismissNull = false): stdClass
     {
-        return (object)$this->toArray($tableColumns);
+        return (object)$this->toArray($tableColumns, true, $dismissNull);
     }
 }

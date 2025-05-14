@@ -17,54 +17,24 @@ use stdClass;
  */
 class Campaign
 {
-    /**
-     * @var int
-     */
     public int $kKampagne = 0;
 
-    /**
-     * @var string
-     */
     public string $cName = '';
 
-    /**
-     * @var string
-     */
     public string $cParameter = '';
 
-    /**
-     * @var string
-     */
     public string $cWert = '';
 
-    /**
-     * @var int
-     */
     public int $nDynamisch = 0;
 
-    /**
-     * @var int
-     */
     public int $nAktiv = 0;
 
-    /**
-     * @var string
-     */
     public string $dErstellt = '';
 
-    /**
-     * @var string
-     */
     public string $dErstellt_DE = '';
 
-    /**
-     * @var int
-     */
     public int $nInternal = 1;
 
-    /**
-     * @var DbInterface
-     */
     private DbInterface $db;
 
     /**
@@ -79,10 +49,6 @@ class Campaign
         }
     }
 
-    /**
-     * @param int $id
-     * @return $this
-     */
     public function loadFromDB(int $id): self
     {
         $data = $this->db->getSingleObject(
@@ -107,9 +73,6 @@ class Campaign
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function insertInDB(): int
     {
         $obj             = new stdClass();
@@ -128,9 +91,6 @@ class Campaign
         return $this->kKampagne;
     }
 
-    /**
-     * @return int
-     */
     public function updateInDB(): int
     {
         $obj             = new stdClass();
@@ -151,9 +111,6 @@ class Campaign
         return $res;
     }
 
-    /**
-     * @return bool
-     */
     public function deleteInDB(): bool
     {
         if ($this->kKampagne <= 0) {
@@ -173,50 +130,39 @@ class Campaign
     }
 
     /**
-     * @return stdClass[]
+     * @return self[]
      */
     public static function getAvailable(): array
     {
-        $cacheID = 'campaigns';
-        /** @var stdClass[]|false $campaigns */
+        $cacheID = 'jtl_cmpgns';
+        /** @var self[]|false $campaigns */
         $campaigns = Shop::Container()->getCache()->get($cacheID);
         if ($campaigns !== false) {
             return $campaigns;
         }
-        $campaigns = Shop::Container()->getDB()->selectAll(
+        $campaigns = [];
+        $data      = Shop::Container()->getDB()->selectAll(
             'tkampagne',
             'nAktiv',
             1,
             '*, DATE_FORMAT(dErstellt, \'%d.%m.%Y %H:%i:%s\') AS dErstellt_DE'
         );
-        foreach ($campaigns as $campaign) {
-            $campaign->kKampagne  = (int)$campaign->kKampagne;
-            $campaign->nDynamisch = (int)$campaign->nDynamisch;
-            $campaign->nAktiv     = (int)$campaign->nAktiv;
-            $campaign->nInternal  = (int)$campaign->nInternal;
+        foreach ($data as $item) {
+            $campaign               = new self();
+            $campaign->kKampagne    = (int)$item->kKampagne;
+            $campaign->nDynamisch   = (int)$item->nDynamisch;
+            $campaign->nAktiv       = (int)$item->nAktiv;
+            $campaign->nInternal    = (int)$item->nInternal;
+            $campaign->cWert        = $item->cWert;
+            $campaign->cParameter   = $item->cParameter;
+            $campaign->cName        = $item->cName;
+            $campaign->dErstellt    = $item->dErstellt;
+            $campaign->dErstellt_DE = \date_format(\date_create($item->dErstellt), 'd.m.Y H:i:s');
+            $campaigns[]            = $campaign;
         }
         Shop::Container()->getCache()->set($cacheID, $campaigns, [\CACHING_GROUP_CORE]);
 
         return $campaigns;
-    }
-
-    /**
-     * @param stdClass $campaign
-     * @return bool
-     */
-    private static function validateStaticParams(stdClass $campaign): bool
-    {
-        $full = Shop::getURL() . '/?' . $campaign->cParameter . '=' . $campaign->cWert;
-        \parse_str(\parse_url($full, \PHP_URL_QUERY) ?: '', $params);
-        $ok = \count($params) > 0;
-        foreach ($params as $param => $value) {
-            if (!self::paramMatches(Request::verifyGPDataString($param), $value)) {
-                $ok = false;
-                break;
-            }
-        }
-
-        return $ok;
     }
 
     /**
@@ -246,64 +192,51 @@ class Campaign
         $hit      = false;
         $referrer = Visitor::getReferer();
         foreach ($campaigns as $campaign) {
-            // Wurde für die aktuelle Kampagne der Parameter via GET oder POST uebergeben?
-            $given = Request::verifyGPDataString($campaign->cParameter);
-            if ($given !== '' && ($campaign->nDynamisch === 1 || self::validateStaticParams($campaign))) {
-                $hit = true;
-                // wurde der HIT für diesen Besucher schon gezaehlt?
-                $event = $db->select(
-                    'tkampagnevorgang',
-                    ['kKampagneDef', 'kKampagne', 'kKey', 'cCustomData'],
-                    [
-                        \KAMPAGNE_DEF_HIT,
-                        $campaign->kKampagne,
-                        $visitorID,
-                        Text::filterXSS($_SERVER['REQUEST_URI']) . ';' . $referrer
-                    ]
-                );
-                if ($event === null) {
-                    $event               = new stdClass();
-                    $event->kKampagne    = $campaign->kKampagne;
-                    $event->kKampagneDef = \KAMPAGNE_DEF_HIT;
-                    $event->kKey         = $visitorID;
-                    $event->fWert        = 1.0;
-                    $event->cParamWert   = $given;
-                    $event->cCustomData  = Text::filterXSS($_SERVER['REQUEST_URI']) . ';' . $referrer;
-                    if ($campaign->nDynamisch === 0) {
-                        $event->cParamWert = $campaign->cWert;
-                    }
-                    $event->dErstellt = 'NOW()';
-                    $db->insert('tkampagnevorgang', $event);
-                    $_SESSION['Kampagnenbesucher'][$campaign->kKampagne]        = $campaign;
-                    $_SESSION['Kampagnenbesucher'][$campaign->kKampagne]->cWert = $event->cParamWert;
-                }
+            $campaign->setDB($db);
+            if (!$campaign->isValid()) {
+                continue;
             }
-
-            if (!$hit && \str_contains($_SERVER['HTTP_REFERER'] ?? '', '.google.')) {
-                // Besucher kommt von Google und hat vorher keine Kampagne getroffen
-                $event = $db->select(
-                    'tkampagnevorgang',
-                    ['kKampagneDef', 'kKampagne', 'kKey'],
-                    [\KAMPAGNE_DEF_HIT, \KAMPAGNE_INTERN_GOOGLE, $visitorID]
-                );
-                if ($event === null) {
-                    $campaign            = new self(\KAMPAGNE_INTERN_GOOGLE, $db);
-                    $event               = new stdClass();
-                    $event->kKampagne    = \KAMPAGNE_INTERN_GOOGLE;
-                    $event->kKampagneDef = \KAMPAGNE_DEF_HIT;
-                    $event->kKey         = $visitorID;
-                    $event->fWert        = 1.0;
-                    $event->cParamWert   = $campaign->cWert;
-                    $event->dErstellt    = 'NOW()';
-                    if ($campaign->nDynamisch === 1) {
-                        $event->cParamWert = $given;
-                    }
-                    $db->insert('tkampagnevorgang', $event);
-                    $_SESSION['Kampagnenbesucher'][$campaign->kKampagne]        = $campaign;
-                    $_SESSION['Kampagnenbesucher'][$campaign->kKampagne]->cWert = $event->cParamWert;
-                }
+            $hit = true;
+            // wurde der HIT für diesen Besucher schon gezaehlt?
+            $event = $db->select(
+                'tkampagnevorgang',
+                ['kKampagneDef', 'kKampagne', 'kKey', 'cCustomData'],
+                [
+                    \KAMPAGNE_DEF_HIT,
+                    $campaign->kKampagne,
+                    $visitorID,
+                    Text::filterXSS($_SERVER['REQUEST_URI']) . ';' . $referrer
+                ]
+            );
+            if ($event !== null) {
+                continue;
             }
+            $campaign->trackHit($visitorID, $referrer);
         }
+        if (!$hit) {
+            self::checkGoogleCampaignHit($visitorID, $db);
+        }
+    }
+
+    private static function checkGoogleCampaignHit(int $visitorID, DbInterface $db): void
+    {
+        if (!\str_contains($_SERVER['HTTP_REFERER'] ?? '', '.google.')) {
+            return;
+        }
+        // Besucher kommt von Google und hat vorher keine Kampagne getroffen
+        $event = $db->select(
+            'tkampagnevorgang',
+            ['kKampagneDef', 'kKampagne', 'kKey'],
+            [\KAMPAGNE_DEF_HIT, \KAMPAGNE_INTERN_GOOGLE, $visitorID]
+        );
+        if ($event !== null) {
+            return;
+        }
+        $campaign = new self(\KAMPAGNE_INTERN_GOOGLE, $db);
+        if ($campaign->nAktiv === 0) {
+            return;
+        }
+        $campaign->trackHit($visitorID, Visitor::getReferer());
     }
 
     /**
@@ -345,8 +278,55 @@ class Campaign
     }
 
     /**
-     * @return string
+     * @return bool
      */
+    private function validateStaticParams(): bool
+    {
+        $full = Shop::getURL() . '/?' . $this->cParameter . '=' . $this->cWert;
+        \parse_str(\parse_url($full, \PHP_URL_QUERY) ?: '', $params);
+        $ok = \count($params) > 0;
+        foreach ($params as $param => $value) {
+            if (!self::paramMatches(Request::verifyGPDataString($param), $value)) {
+                $ok = false;
+                break;
+            }
+        }
+
+        return $ok;
+    }
+
+    public function isValid(): bool
+    {
+        $given = Request::verifyGPDataString($this->cParameter);
+
+        return $given !== '' && ($this->nDynamisch === 1 || $this->validateStaticParams());
+    }
+
+    public function trackHit(int $visitorID, string $referrer = ''): void
+    {
+        $requestURL          = $_SERVER['REQUEST_URI'] ?? '';
+        $event               = new stdClass();
+        $event->kKampagne    = $this->kKampagne;
+        $event->kKampagneDef = \KAMPAGNE_DEF_HIT;
+        $event->kKey         = $visitorID;
+        $event->fWert        = 1.0;
+        $event->cParamWert   = $this->nDynamisch === 0
+            ? $this->cWert
+            : Request::verifyGPDataString($this->cParameter);
+        if ($referrer !== '' || $requestURL !== '') {
+            $event->cCustomData = Text::filterXSS($requestURL) . ';' . $referrer;
+        }
+        $event->dErstellt = 'NOW()';
+        $this->cWert      = $event->cParamWert;
+        $this->db->insert('tkampagnevorgang', $event);
+        $_SESSION['Kampagnenbesucher'][$this->kKampagne] = $this;
+    }
+
+    public function setDB(DbInterface $db): void
+    {
+        $this->db = $db;
+    }
+
     public function getName(): string
     {
         return $this->cParameter === 'jtl'

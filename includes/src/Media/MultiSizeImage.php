@@ -143,7 +143,8 @@ trait MultiSizeImage
         );
         try {
             Image::render($req);
-        } catch (Exception) {
+        } catch (Exception $e) {
+            Shop::Container()->getLogService()->warning('Could not generate image: ' . $e->getMessage());
         }
 
         return $class::getThumbByRequest($req);

@@ -29,7 +29,7 @@ class LanguageVariables extends AbstractItem
      */
     public function install(): int
     {
-        $languages = LanguageHelper::getAllLanguages(2, true);
+        $languages = LanguageHelper::getAllLanguages(2, true, true);
         foreach ($this->getNode() as $t => $langVar) {
             $nonPluginLanguages = $languages;
             $t                  = (string)$t;

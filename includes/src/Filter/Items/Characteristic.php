@@ -226,14 +226,11 @@ class Characteristic extends BaseCharacteristic
      */
     public function getSQLCondition(): string
     {
-        $db = $this->getProductFilter()->getDB();
-
         return "\n" . 'tartikelmerkmal.kArtikel IN (' .
             'SELECT kArtikel FROM ' . $this->getTableName() .
             ' WHERE ' . $this->getPrimaryKeyRow() . ' IN (' .
             $this->getValue() .
-            '))' .
-            ' #condition from ' . $db->quote(__METHOD__) . ' ' . $db->quote($this->getName()) . "\n";
+            '))';
     }
 
     /**
@@ -245,7 +242,6 @@ class Characteristic extends BaseCharacteristic
             ->setType('JOIN')
             ->setTable('tartikelmerkmal')
             ->setOn('tartikel.kArtikel = tartikelmerkmal.kArtikel')
-            ->setComment('join from ' . __METHOD__)
             ->setOrigin(__CLASS__);
     }
 
@@ -280,7 +276,6 @@ class Characteristic extends BaseCharacteristic
         $state->setSelect(['tmerkmal.cName']);
         $state->addJoin(
             (new Join())
-                ->setComment('join1 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tartikelmerkmal')
                 ->setOn('tartikel.kArtikel = tartikelmerkmal.kArtikel')
@@ -288,7 +283,6 @@ class Characteristic extends BaseCharacteristic
         );
         $state->addJoin(
             (new Join())
-                ->setComment('join2 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tmerkmalwert')
                 ->setOn('tmerkmalwert.kMerkmalWert = tartikelmerkmal.kMerkmalWert')
@@ -296,7 +290,6 @@ class Characteristic extends BaseCharacteristic
         );
         $state->addJoin(
             (new Join())
-                ->setComment('join4 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tmerkmal')
                 ->setOn('tmerkmal.kMerkmal = tartikelmerkmal.kMerkmal')
@@ -312,7 +305,6 @@ class Characteristic extends BaseCharacteristic
             ]);
             $state->addJoin(
                 (new Join())
-                    ->setComment('non default lang join1 from ' . __METHOD__)
                     ->setType('LEFT JOIN')
                     ->setTable('tmerkmalsprache')
                     ->setOn(
@@ -323,7 +315,6 @@ class Characteristic extends BaseCharacteristic
             );
             $state->addJoin(
                 (new Join())
-                    ->setComment('non default lang join2 from ' . __METHOD__)
                     ->setType('INNER JOIN')
                     ->setTable('tmerkmalwertsprache AS standardSprache')
                     ->setOn(
@@ -334,7 +325,6 @@ class Characteristic extends BaseCharacteristic
             );
             $state->addJoin(
                 (new Join())
-                    ->setComment('non default lang join3 from ' . __METHOD__)
                     ->setType('LEFT JOIN')
                     ->setTable('tmerkmalwertsprache AS fremdSprache')
                     ->setOn(
@@ -347,7 +337,6 @@ class Characteristic extends BaseCharacteristic
             $state->setSelect(['tmerkmalwertsprache.cWert', 'tmerkmalwertsprache.cSeo', 'tmerkmal.cName']);
             $state->addJoin(
                 (new Join())
-                    ->setComment('join default lang from ' . __METHOD__)
                     ->setType('INNER JOIN')
                     ->setTable('tmerkmalwertsprache')
                     ->setOn(
@@ -382,7 +371,6 @@ class Characteristic extends BaseCharacteristic
             if (\count($activeAndFilterIDs) > 0) {
                 $state->addJoin(
                     (new Join())
-                        ->setComment('join active AND filters from ' . __METHOD__)
                         ->setType('JOIN')
                         ->setTable(
                             '(SELECT kArtikel

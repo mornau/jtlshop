@@ -47,7 +47,6 @@ class ProductFilterSQL implements ProductFilterSQLInterface
         }
         if (!Shop::get('skipProductVisibilityCheck')) {
             $joins[] = (new Join())
-                ->setComment('product visiblity join from getBaseQuery')
                 ->setType('LEFT JOIN')
                 ->setTable('tartikelsichtbarkeit')
                 ->setOrigin(__CLASS__)
@@ -144,10 +143,10 @@ class ProductFilterSQL implements ProductFilterSQLInterface
         return 'SELECT ' . \implode(', ', $select) . '
             FROM tartikel ' . \implode("\n", $joins) . "\n" .
             (empty($cond) ? '' : (' WHERE ' . $cond . "\n")) .
-            (empty($groupBy) ? '' : ('#default group by' . "\n" . 'GROUP BY ' . \implode(', ', $groupBy) . "\n")) .
+            (empty($groupBy) ? '' : ('GROUP BY ' . \implode(', ', $groupBy) . "\n")) .
             (\implode(' AND ', $having) . "\n") .
-            (empty($sort) ? '' : ('#limit sql' . "\n" . 'ORDER BY ' . $sort)) .
-            (empty($limit) ? '' : ('#order by sql' . "\n" . 'LIMIT ' . $limit));
+            (empty($sort) ? '' : ('ORDER BY ' . $sort)) .
+            (empty($limit) ? '' : ('LIMIT ' . $limit));
     }
 
     /**

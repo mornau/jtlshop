@@ -593,16 +593,14 @@ class Text
      */
     public static function parseSSKint($ssk): array
     {
-        return \is_string($ssk)
-            ? \array_map(
-                static function ($e): int {
-                    return (int)\trim($e);
-                },
-                \array_filter(\explode(';', $ssk), static function ($e): bool {
-                    return $e !== '' && $e !== null;
-                })
-            )
-            : [];
+        $result = [];
+        if (\is_string($ssk)) {
+            $result = \explode(';', $ssk);
+            $result = \array_map('\trim', $result);
+            $result = \array_filter($result);
+        }
+
+        return \array_map('\intval', $result);
     }
 
     /**

@@ -82,19 +82,23 @@
                                                 <span class="fas fa-envelope"></span>
                                             </span>
                                         </button>
-                                        <button type="button"  data-id="{$template->getID()}"
-                                                class="btn btn-link px-2 btn-edit" title="{__('modify')}"
-                                                data-toggle="tooltip" data-placement="top" >
-                                            <a href="{$adminURL}{$route}?kEmailvorlage={$template->getID()}&token={$smarty.session.jtl_token}"
-                                               class="btn btn-link px-2"
-                                               title="{__('modify')}"
-                                               data-toggle="tooltip">
-                                                    <span class="icon-hover">
-                                                        <span class="fal fa-edit"></span>
-                                                        <span class="fas fa-edit"></span>
-                                                    </span>
-                                            </a>
-                                        </button>
+                                        {$editLink = $adminURL|cat:
+                                            $route|cat:'?kEmailvorlage='|cat:
+                                            $template->getID()|cat:'&token='|cat:
+                                            $smarty.session.jtl_token}
+                                        {if $template->getPluginID() > 0}
+                                            {$editLink = $editLink|cat:'&kPlugin='|cat:$template->getPluginID()}
+                                        {/if}
+                                        <a href="{$editLink}"
+                                           class="btn btn-link px-2 btn-edit"
+                                           title="{__('modify')}"
+                                           data-toggle="tooltip"
+                                           data-placement="top">
+                                            <span class="icon-hover">
+                                                <span class="fal fa-edit"></span>
+                                                <span class="fas fa-edit"></span>
+                                            </span>
+                                        </a>
                                     </div>
                                 </form>
                             </td>

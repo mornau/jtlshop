@@ -511,6 +511,9 @@
   margin-top: 8px;
   margin-bottom: 0;
 }
+#opc #opcSidebar #opc-sidebar-content #opc-draft-list .opc-draft .opc-draft-info .opc-draft-info-line .opc-customer-group-name {
+  color: #435A6B;
+}
 #opc #opcSidebar #opc-sidebar-content #opc-draft-list .opc-draft .opc-draft-info .opc-draft-actions {
   position: absolute;
   top: -4px;

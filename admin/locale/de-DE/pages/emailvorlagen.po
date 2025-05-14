@@ -253,6 +253,9 @@ msgstr "E-Mail-Body ist leer"
 msgid "Check syntax"
 msgstr "E-Mail-Syntax prüfen"
 
+msgid "Check all templates"
+msgstr "Alle Vorlagen prüfen"
+
 msgid "Syntax check fail"
 msgstr "E-Mail Syntaxprüfung fehlgeschlagen"
 

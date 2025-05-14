@@ -74,7 +74,7 @@ class JTLSmartyTemplateHints extends JTLSmartyTemplateClass
             }
         }
         parent::_subTemplateRender(
-            $this->smarty->getResourceName($template),
+            $template,
             $cache_id,
             $compile_id,
             $caching,

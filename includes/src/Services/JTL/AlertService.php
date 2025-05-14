@@ -155,7 +155,11 @@ class AlertService implements AlertServiceInterface
             return $alert->getKey() === $key;
         });
         if ($id !== false) {
-            $this->getAlertList()->pull($id);
+            /** @var Alert $alert */
+            $alert = $this->getAlertList()->pull($id);
+            if ($alert->getSaveInSession()) {
+                $alert->removeFromSession();
+            }
         }
     }
 

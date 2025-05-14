@@ -186,7 +186,7 @@ class DefaultParser
                 $customFilterSeo = $arr[0];
                 $slug            .= \SEP_MM_MMW . $arr[1];
             }
-            if (\str_contains($customFilterSeo, \SEP_SEITE)) {
+            if (\preg_match('/[^_](' . \SEP_SEITE . '(\d+))/', $customFilterSeo) === 1) {
                 $arr             = \explode(\SEP_SEITE, $customFilterSeo);
                 $customFilterSeo = $arr[0];
                 $slug            .= \SEP_SEITE . $arr[1];
@@ -249,7 +249,7 @@ class DefaultParser
                 $characteristic = $arr[0];
                 $slug           .= \SEP_MM_MMW . $arr[1];
             }
-            if (\str_contains($characteristic, \SEP_SEITE)) {
+            if (\preg_match('/[^_](' . \SEP_SEITE . '(\d+))/', $characteristic) === 1) {
                 $arr            = \explode(\SEP_SEITE, $characteristic);
                 $characteristic = $arr[0];
                 $slug           .= \SEP_SEITE . $arr[1];
@@ -335,7 +335,7 @@ class DefaultParser
                     $manufSeo[$i] = $arr[0];
                     $slug         .= \SEP_MM_MMW . $arr[1];
                 }
-                if (\str_contains($hstseo, \SEP_SEITE)) {
+                if (\preg_match('/[^_](' . \SEP_SEITE . '(\d+))/', $hstseo) === 1) {
                     $arr          = \explode(\SEP_SEITE, $hstseo);
                     $manufSeo[$i] = $arr[0];
                     $slug         .= \SEP_SEITE . $arr[1];
@@ -406,10 +406,12 @@ class DefaultParser
         $caseMismatches = [];
         if (\is_array($categories) && \count($categories) > 1) {
             foreach ($categories as $i => $category) {
+                $category = $this->getSlugFromHierarchy($category);
                 if ($i === 0) {
                     $slug = $category;
                 } else {
-                    $categorySeo[] = $category;
+                    $catOrSubCategory = \explode('/', $category);
+                    $categorySeo[]    = \end($catOrSubCategory);
                 }
             }
             foreach ($categorySeo as $i => $catSeo) {
@@ -428,17 +430,14 @@ class DefaultParser
                     $categorySeo[$i] = $arr[0];
                     $slug            .= \SEP_MM_MMW . $arr[1];
                 }
-                if (\str_contains($catSeo, \SEP_SEITE)) {
+                if (\preg_match('/[^_](' . \SEP_SEITE . '(\d+))/', $catSeo) === 1) {
                     $arr             = \explode(\SEP_SEITE, $catSeo);
                     $categorySeo[$i] = $arr[0];
                     $slug            .= \SEP_SEITE . $arr[1];
                 }
             }
         } elseif (\CATEGORIES_SLUG_HIERARCHICALLY === true && \str_contains($slug, '/')) {
-            $valid = $this->validateCategoryHierarchy(\explode('/', $slug));
-            if ($valid !== null) {
-                $slug = $valid->slug;
-            }
+            $slug = $this->getSlugFromHierarchy($slug);
         } else {
             $slug = $categories[0];
         }
@@ -557,5 +556,17 @@ class DefaultParser
             $oriSlug
         );
         $this->state->caseMismatches[$oriSlug] = $fixedSlug;
+    }
+
+    private function getSlugFromHierarchy(string $slug): string
+    {
+        if (\CATEGORIES_SLUG_HIERARCHICALLY === true && \str_contains($slug, '/')) {
+            $valid = $this->validateCategoryHierarchy(\explode('/', $slug));
+            if ($valid !== null) {
+                return $valid->slug;
+            }
+        }
+
+        return $slug;
     }
 }

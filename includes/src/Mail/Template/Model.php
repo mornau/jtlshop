@@ -774,8 +774,12 @@ final class Model
     {
         $pluginID = 0;
         $moduleID = $templateID;
-        if (\str_starts_with($templateID, 'kPlugin')) {
-            [, $pluginID, $moduleID] = \explode('_', $templateID);
+        if (\str_starts_with($templateID, 'kPlugin_')) {
+            // $templateID looks like "kPlugin_1234_someplugin" or "kPlugin_123_some_plugin",
+            // multiple underscores are possible
+            $data = \explode('_', $templateID);
+
+            [, $pluginID, $moduleID] = [\array_shift($data), \array_shift($data), \implode('_', $data)];
         }
         $data = $this->db->getObjects(
             'SELECT *, temailvorlage.kEmailvorlage AS id
@@ -784,7 +788,7 @@ final class Model
                     ON temailvorlage.kEmailvorlage = temailvorlagesprache.kEmailvorlage
                 WHERE temailvorlage.kPlugin = :pid
                     AND cModulId = :mid',
-            ['pid' => $pluginID, 'mid' => $moduleID]
+            ['pid' => (int)$pluginID, 'mid' => $moduleID]
         );
 
         return \count($data) === 0

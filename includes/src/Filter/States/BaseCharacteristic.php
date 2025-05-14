@@ -108,7 +108,6 @@ class BaseCharacteristic extends AbstractFilter
     {
         return (new Join())
             ->setType('JOIN')
-            ->setComment('JOIN from ' . __METHOD__)
             ->setTable(
                 '(SELECT DISTINCT kArtikel
                       FROM tartikelmerkmal

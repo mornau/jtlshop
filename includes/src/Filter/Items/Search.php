@@ -379,8 +379,7 @@ class Search extends AbstractFilter
                           HAVING COUNT(*) = ' . $count . '
                     ) AS jfSuche'
             )
-            ->setOn('jfSuche.kArtikel = tartikel.kArtikel')
-            ->setComment('JOIN1 from ' . __METHOD__);
+            ->setOn('jfSuche.kArtikel = tartikel.kArtikel');
     }
 
     /**
@@ -435,7 +434,6 @@ class Search extends AbstractFilter
         $sql->setGroupBy(['tsuchanfrage.kSuchanfrage', 'tartikel.kArtikel']);
         $sql->addJoin(
             (new Join())
-                ->setComment('JOIN1 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tsuchcachetreffer')
                 ->setOn('tartikel.kArtikel = tsuchcachetreffer.kArtikel')
@@ -443,7 +441,6 @@ class Search extends AbstractFilter
         );
         $sql->addJoin(
             (new Join())
-                ->setComment('JOIN2 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tsuchcache')
                 ->setOn('tsuchcache.kSuchCache = tsuchcachetreffer.kSuchCache')
@@ -451,7 +448,6 @@ class Search extends AbstractFilter
         );
         $sql->addJoin(
             (new Join())
-                ->setComment('JOIN3 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tsuchanfrage')
                 ->setOn(

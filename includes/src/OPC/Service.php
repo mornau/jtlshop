@@ -24,6 +24,7 @@ use JTL\Filter\Type;
 use JTL\Helpers\Request;
 use JTL\Helpers\Tax;
 use JTL\L10n\GetText;
+use JTL\Language\LanguageHelper;
 use JTL\OPC\Portlets\MissingPortlet\MissingPortlet;
 use JTL\Shop;
 
@@ -537,5 +538,28 @@ class Service
         }
 
         return $this->db->getInputTplPathFromPlugin($type);
+    }
+
+    /**
+     * @return object[]
+     */
+    public function getCustomerGroups(): array
+    {
+        return $this->db->getCustomerGroups();
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getCustomerGroupName(int $id): string
+    {
+        foreach ($this->getCustomerGroups() as $group) {
+            if ((int)$group->id === $id) {
+                return $group->name;
+            }
+        }
+
+        return '';
     }
 }

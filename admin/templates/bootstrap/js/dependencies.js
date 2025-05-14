@@ -17,6 +17,3 @@ import 'bootstrap-colorpicker';
 import './dragabble.js';
 import 'bootstrap-select';
 import 'bootstrap';
-
-import Ladda from './bootstrap-ladda.js';
-window.Ladda = Ladda.Ladda;

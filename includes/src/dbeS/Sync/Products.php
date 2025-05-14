@@ -277,7 +277,21 @@ final class Products extends AbstractSync
         if (isset($products[0]->kVPEEinheit) && \is_array($products[0]->kVPEEinheit)) {
             $products[0]->kVPEEinheit = $products[0]->kVPEEinheit[0];
         }
-        // any new orders since last wawi-sync? see https://gitlab.jtl-software.de/jtlshop/jtl-shop/issues/304
+        if (isset($products[0]->fGewicht) && (int)$products[0]->fGewicht < 0) {
+            $products[0]->fGewicht = 0;
+            $this->logger->warning(
+                'Artikel-Sync: fGewicht < 0 von kArtikel {pid} wurde auf 0 gesetzt.',
+                ['pid' => (int)$products[0]->kArtikel]
+            );
+        }
+        if (isset($products[0]->fArtikelgewicht) && (int)$products[0]->fArtikelgewicht < 0) {
+            $products[0]->fArtikelgewicht = 0;
+            $this->logger->warning(
+                'Artikel-Sync: fArtikelgewicht < 0 von kArtikel {pid} wurde auf 0 gesetzt.',
+                ['pid' => (int)$products[0]->kArtikel]
+            );
+        }
+        // any new orders since last wawi-sync?
         if (isset($products[0]->fLagerbestand) && $products[0]->fLagerbestand > 0) {
             $delta = $this->db->getSingleObject(
                 "SELECT SUM(pos.nAnzahl) AS totalquantity

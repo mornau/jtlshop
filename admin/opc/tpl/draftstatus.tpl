@@ -1,4 +1,4 @@
-{$draftStatus = $page->getStatus(0)}
+{$draftStatus = $page->getStatus()}
 {if $draftStatus === 0}
     {if $page->getPublishTo() === null}
         <span class="opc-public">{__('activeSince')}</span>

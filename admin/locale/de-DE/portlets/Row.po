@@ -17,3 +17,8 @@ msgstr "Spalten"
 msgid "rowLayoutDesc"
 msgstr "Definiert die Aufteilung der Spalten bei verschiedenen Gerätegrößen. 12 bedeutet dabei, die Spalte wird in "
 "voller Breite dargestellt."
+
+msgid "rowLayoutWarning"
+msgstr "<strong>Achtung:</strong> Wenn sie die Aufteilung auf weniger Spalten ändern, wird die entsprechende "
+"Differenz an Spalten am rechten Ende des Grids abgeschnitten. Achten Sie also darauf, dass sie den Inhalt dieser "
+"Spalten, vorher an die gewünschte Stelle verschieben."

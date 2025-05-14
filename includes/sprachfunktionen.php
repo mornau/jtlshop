@@ -103,7 +103,7 @@ function lang_mindestbestellmenge(Artikel $product, $amount, int $configItemID =
         $product->cEinheit = ' ' . $product->cEinheit;
     }
     $name = $product->cName;
-    if ($configItemID > 0 && class_exists('Konfigitem')) {
+    if ($configItemID > 0 && Item::checkLicense() === true) {
         $name = (new Item($configItemID))->getName();
     }
 

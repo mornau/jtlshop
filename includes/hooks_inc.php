@@ -2108,6 +2108,16 @@ const HOOK_CARTHELPER_GET_XSELLING = 411;
 const HOOK_IO_HANDLE_RESPONSE = 412;
 
 /**
+ * in Cart::setzePositionsPreise()
+ *
+ * @since 5.4.1
+ * @file Cart.php
+ * @param JTL\Cart\CartItem position
+ * @param JTL\Cart\CartItem oldPosition
+ */
+const HOOK_SET_POSITION_PRICES_END = 413;
+
+/**
  * @param JTL\Review\ReviewModel $review
  * @param float                  $reward
  * @since 5.4.0

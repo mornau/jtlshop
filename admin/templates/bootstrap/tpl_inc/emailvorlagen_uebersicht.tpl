@@ -30,7 +30,7 @@
             </div>
             <div class="ml-auto col-sm-6 col-xl-auto">
                 <button type="button" class="btn btn-primary btn-block btn-syntaxcheck-all">
-                    <i class="fa fa-check"></i> {__('Check syntax')}
+                    <i class="fa fa-check"></i> {__('Check all templates')}
                 </button>
             </div>
         </div>
@@ -145,21 +145,21 @@
     if (doCheckTpl && doCheckTpl > 0) {
         validateTemplateSyntax(doCheckTpl);
     }
-    $('.btn-syntaxcheck').on('click', function (e) {
+    $('.btn-syntaxcheck').on('click', function () {
         let id = $(this).data('id');
         if (id) {
             validateTemplateSyntax(id);
         }
     });
-    $('.btn-syntaxcheck-all').on('click', function (e) {
-        $('.btn-syntaxcheck').each(function (e) {
+    $('.btn-syntaxcheck-all').on('click', function () {
+        $('.btn-syntaxcheck').each(function () {
             let id = $(this).data('id');
             if (id) {
                 validateTemplateSyntax(id, true);
             }
         });
     });
-    $('.btn-reset').on('click', function (e) {
+    $('.btn-reset').on('click', function () {
             let id = $(this).data('id');
             if (id) {
                 resetTemplate(id);

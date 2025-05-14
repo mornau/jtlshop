@@ -112,7 +112,7 @@ final class Customer extends AbstractSync
             }
             $customer = new CustomerClass((int)$customerData->kKunde, $service, $this->db);
             if ($customer->nRegistriert === 1 && $customer->cMail) {
-                $customer->prepareResetPassword();
+                $customer->prepareResetPassword(false);
             } else {
                 \syncException(
                     'Kunde hat entweder keine Emailadresse oder es ist ein unregistrierter Kunde',

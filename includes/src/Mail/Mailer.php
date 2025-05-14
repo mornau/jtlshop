@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace JTL\Mail;
 
-use JTL\DB\DbInterface;
 use JTL\Emailhistory;
 use JTL\Mail\Hydrator\HydratorInterface;
 use JTL\Mail\Mail\Attachment;
@@ -22,56 +21,28 @@ use JTL\Shopsetting;
  */
 class Mailer
 {
-    /**
-     * @var DbInterface|null
-     */
-    protected ?DbInterface $db = null;
-
-    /**
-     * @var array
-     */
     private array $config;
 
-    /**
-     * @var MailService
-     */
-    protected MailService $mailService;
-
-    /**
-     * Mailer constructor.
-     * @param HydratorInterface  $hydrator
-     * @param RendererInterface  $renderer
-     * @param Shopsetting        $settings
-     * @param ValidatorInterface $validator
-     */
     public function __construct(
         private readonly HydratorInterface $hydrator,
         private RendererInterface $renderer,
         Shopsetting $settings,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
+        private readonly MailService $mailService = new MailService()
     ) {
         $this->config = $settings->getAll();
     }
 
-    /**
-     * @return RendererInterface
-     */
     public function getRenderer(): RendererInterface
     {
         return $this->renderer;
     }
 
-    /**
-     * @param RendererInterface $renderer
-     */
     public function setRenderer(RendererInterface $renderer): void
     {
         $this->renderer = $renderer;
     }
 
-    /**
-     * @return HydratorInterface
-     */
     public function getHydrator(): HydratorInterface
     {
         return $this->hydrator;
@@ -86,17 +57,11 @@ class Mailer
         return $section === null ? $this->config : ($this->config[$section] ?? []);
     }
 
-    /**
-     * @param array $config
-     */
     public function setConfig(array $config): void
     {
         $this->config = $config;
     }
 
-    /**
-     * @return ValidatorInterface
-     */
     public function getValidator(): ValidatorInterface
     {
         return $this->validator;
@@ -104,10 +69,6 @@ class Mailer
 
     protected function getMailService(): MailService
     {
-        if (empty($this->mailService)) {
-            $this->mailService = new MailService();
-        }
-
         return $this->mailService;
     }
 
@@ -134,9 +95,6 @@ class Mailer
             ->save();
     }
 
-    /**
-     * @param MailInterface $mail
-     */
     private function hydrate(MailInterface $mail): void
     {
         $this->hydrator->hydrate($mail->getData(), $mail->getLanguage());
@@ -167,10 +125,6 @@ class Mailer
         return $mail;
     }
 
-    /**
-     * @param MailInterface $mail
-     * @return bool
-     */
     public function send(MailInterface $mail): bool
     {
         //will always run in background so no exception may remain uncatched
@@ -179,7 +133,8 @@ class Mailer
             $mailObject = $this->prepareMail($mail);
 
             if (!$this->validator->validate($mail)) {
-                throw new \Exception('Mail failed validation');
+                throw new \Exception(nl2br("The email could not be sent because email failed validation.\r\n"
+                    . $mail->getError(), false));
             }
 
             [$queued, $mailID] = $this->getMailService()->queueMail($mailObject);
@@ -275,7 +230,7 @@ class Mailer
             'Emailvorlage'  => null,
             'template'      => $mail->getTemplate()
         ]);
-        $sent = $this->mailService->sendViaPHPMailer($mail);
+        $sent = $this->getMailService()->sendViaPHPMailer($mail);
         if ($sent === true) {
             $this->log($mail);
         }

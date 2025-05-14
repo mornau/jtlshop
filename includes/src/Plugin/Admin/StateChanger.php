@@ -170,6 +170,16 @@ class StateChanger
 
     protected function logStateChange(int $pluginID, int $newState): void
     {
+        $exists = $this->db->getSingleObject(
+            'SELECT * 
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_NAME = :tbl
+                    AND TABLE_SCHEMA = :sma',
+            ['sma' => \DB_NAME, 'tbl' => 'plugin_state_log']
+        );
+        if ($exists === null) {
+            return;
+        }
         $this->db->queryPrepared(
             'INSERT
             INTO plugin_state_log (adminloginID, pluginID, pluginName, stateOld, stateNew, timestamp)

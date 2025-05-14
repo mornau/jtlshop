@@ -89,11 +89,12 @@ class Frontend extends AbstractSession
     public function deferredUpdate(): void
     {
         \executeHook(\HOOK_CORE_SESSION_CONSTRUCTOR);
-        if ($this->mustUpdate !== true) {
+        if ($this->mustUpdate !== true && (bool)($_SESSION['session.fully_initialized'] ?? false) === true) {
             return;
         }
         self::getCart()->loescheDeaktiviertePositionen();
         Tax::setTaxRates();
+        $_SESSION['session.fully_initialized'] = true;
     }
 
     /**
@@ -233,10 +234,11 @@ class Frontend extends AbstractSession
      */
     private function checkSessionUpdate(): bool
     {
-        return ((isset($_SESSION['Kundengruppe']) && \get_class($_SESSION['Kundengruppe']) === stdClass::class)
+        return ((bool)($_SESSION['session.fully_initialized'] ?? false) !== true
+            || (isset($_SESSION['Kundengruppe']) && \get_class($_SESSION['Kundengruppe']) === stdClass::class)
             || (isset($_SESSION['Waehrung']) && \get_class($_SESSION['Waehrung']) === stdClass::class)
-            || (isset($_SESSION['Sprachen'])
-                && \get_class(\array_values($_SESSION['Sprachen'])[0]) === stdClass::class));
+            || (isset($_SESSION['Sprachen']) && \get_class(\array_values($_SESSION['Sprachen'])[0]) === stdClass::class)
+        );
     }
 
     /**

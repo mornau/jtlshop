@@ -66,6 +66,11 @@ class Row extends Portlet
                 ],
                 'desc'    => \__('rowLayoutDesc'),
             ],
+            'hint'   => [
+                'type'  => InputType::HINT,
+                'class' => 'warning',
+                'text'  => \__('rowLayoutWarning'),
+            ],
         ];
     }
 

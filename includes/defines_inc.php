@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 // Version
-const APPLICATION_VERSION         = '5.4.0';
-const APPLICATION_BUILD_SHA       = '34d0b8d7accd11f06358af551ae3ec8c01db0ca6';
+const APPLICATION_VERSION         = '5.4.1';
+const APPLICATION_BUILD_SHA       = '9c165ae757285f504e6f29cfb53ef0496217cabf';
 const JTL_MIN_WAWI_VERSION        = 100000;
 const JTL_MIN_SHOP_UPDATE_VERSION = '4.2.0';
 
@@ -608,6 +608,7 @@ const CACHING_GROUP_OPTION                = 'opt';
 const CACHING_GROUP_PLUGIN                = 'plgn';
 const CACHING_GROUP_CORE                  = 'core';
 const CACHING_GROUP_LICENSES              = 'lic';
+const CACHING_GROUP_RECOMMENDATIONS       = 'rec';
 const CACHING_GROUP_OBJECT                = 'obj';
 const CACHING_GROUP_BOX                   = 'bx';
 const CACHING_GROUP_NEWS                  = 'nws';

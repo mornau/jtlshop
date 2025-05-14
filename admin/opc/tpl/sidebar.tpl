@@ -139,19 +139,27 @@
             </label>
             <ul id="displayWidths">
                 <li>
-                    <button onclick="opc.gui.setDisplayWidthXS()"><i class="fas fa-mobile-alt"></i></button>
+                    <button onclick="opc.gui.setDisplayWidthXS()" title="{__('setDisplayWidthXS')}">
+                        <i class="fas fa-mobile-alt"></i>
+                    </button>
                 </li>
                 <li>
-                    <button onclick="opc.gui.setDisplayWidthSM()"><i class="fas fa-tablet-alt"></i></button>
+                    <button onclick="opc.gui.setDisplayWidthSM()" title="{__('setDisplayWidthSM')}">
+                        <i class="fas fa-tablet-alt"></i>
+                    </button>
                 </li>
                 <li>
-                    <button onclick="opc.gui.setDisplayWidthMD()"><i class="fas fa-laptop"></i></button>
+                    <button onclick="opc.gui.setDisplayWidthMD()" title="{__('setDisplayWidthMD')}">
+                        <i class="fas fa-laptop"></i>
+                    </button>
                 </li>
                 <li>
-                    <button onclick="opc.gui.setDisplayWidthLG()"><i class="fas fa-desktop"></i></button>
+                    <button onclick="opc.gui.setDisplayWidthLG()" title="{__('setDisplayWidthLG')}">
+                        <i class="fas fa-desktop"></i>
+                    </button>
                 </li>
                 <li>
-                    <button onclick="opc.gui.setDisplayWidthXL()" class="active">
+                    <button onclick="opc.gui.setDisplayWidthXL()" class="active" title="{__('setDisplayWidthXL')}">
                         <i class="fas fa-expand"></i>
                     </button>
                 </li>

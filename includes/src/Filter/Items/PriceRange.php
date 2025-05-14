@@ -16,6 +16,7 @@ use JTL\Filter\ProductFilter;
 use JTL\Filter\StateSQL;
 use JTL\Filter\StateSQLInterface;
 use JTL\Helpers\GeneralObject;
+use JTL\Helpers\Tax;
 use JTL\MagicCompatibilityTrait;
 use JTL\Session\Frontend;
 use JTL\Shop;
@@ -190,7 +191,10 @@ class PriceRange extends AbstractFilter
         $discount            = (isset($_SESSION['Kunde']->fRabatt) && $_SESSION['Kunde']->fRabatt > 0)
             ? (float)$_SESSION['Kunde']->fRabatt
             : 0.0;
-        $rateKeys            = \array_keys($_SESSION['Steuersatz']);
+        if (!isset($_SESSION['Steuersatz'])) {
+            Tax::setTaxRates();
+        }
+        $rateKeys = \array_keys($_SESSION['Steuersatz'] ?? []);
         if (Frontend::getCustomerGroup()->isMerchant()) {
             $this->condition .= ' ROUND(LEAST((tpreisdetail.fVKNetto * ' .
                 $conversionFactor . ') * ((100 - GREATEST(IFNULL(tartikelkategorierabatt.fRabatt, 0), ' .
@@ -257,12 +261,10 @@ class PriceRange extends AbstractFilter
             (new MultiJoin())
                 ->addJoin(
                     (new Join())
-                        ->setComment('subjoin for tpreis table')
                         ->setType('JOIN')
                         ->setTable('tpreisdetail')
                         ->setOn('tpreisdetail.kPreis = tpreis.kPreis AND tpreisdetail.nAnzahlAb = 0')
                 )
-                ->setComment('join1 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tpreis')
                 ->setOn(
@@ -271,7 +273,6 @@ class PriceRange extends AbstractFilter
                 )
                 ->setOrigin(__CLASS__),
             (new Join())
-                ->setComment('join2 from ' . __METHOD__)
                 ->setType('LEFT JOIN')
                 ->setTable('tartikelkategorierabatt')
                 ->setOn(
@@ -280,7 +281,6 @@ class PriceRange extends AbstractFilter
                 )
                 ->setOrigin(__CLASS__),
             (new Join())
-                ->setComment('join3 from ' . __METHOD__)
                 ->setType('LEFT JOIN')
                 ->setTable('tartikelsonderpreis')
                 ->setOn(
@@ -296,7 +296,6 @@ class PriceRange extends AbstractFilter
                 )
                 ->setOrigin(__CLASS__),
             (new Join())
-                ->setComment('join4 from ' . __METHOD__)
                 ->setType('LEFT JOIN')
                 ->setTable('tsonderpreise')
                 ->setOn(
@@ -646,12 +645,10 @@ class PriceRange extends AbstractFilter
         $sql->addJoin(
             (new MultiJoin())->addJoin(
                 (new Join())
-                    ->setComment('subjoin for tpreis table')
                     ->setType('JOIN')
                     ->setTable('tpreisdetail')
                     ->setOn('tpreisdetail.kPreis = tpreis.kPreis AND tpreisdetail.nAnzahlAb = 0')
             )
-                ->setComment('join1 from ' . __METHOD__)
                 ->setTable('tpreis')
                 ->setType('JOIN')
                 ->setOn(
@@ -661,7 +658,6 @@ class PriceRange extends AbstractFilter
                 ->setOrigin(__CLASS__)
         );
         /*$sql->addJoin((new Join())
-            ->setComment('join preisdetail from ' . __METHOD__)
             ->setType('JOIN')
             ->setTable('tpreisdetail')
             ->setOn('tpreisdetail.kPreis = tpreis.kPreis AND tpreisdetail.nAnzahlAb = 0')
@@ -669,7 +665,6 @@ class PriceRange extends AbstractFilter
         if (!Shop::get('skipProductVisibilityCheck')) {
             $sql->addJoin(
                 (new Join())
-                    ->setComment('join2 from ' . __METHOD__)
                     ->setTable('tartikelsichtbarkeit')
                     ->setType('LEFT JOIN')
                     ->setOn(

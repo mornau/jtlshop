@@ -109,7 +109,8 @@ class Manager
             [
                 'headers' => $this->getHeaders(),
                 'verify'  => true,
-                'body'    => $body
+                'body'    => $body,
+                'timeout' => \CURL_TIMEOUT_IN_SECONDS
             ]
         );
 
@@ -139,7 +140,8 @@ class Manager
             [
                 'headers' => $this->getHeaders(),
                 'verify'  => true,
-                'body'    => $body
+                'body'    => $body,
+                'timeout' => \CURL_TIMEOUT_IN_SECONDS
             ]
         );
 
@@ -169,7 +171,8 @@ class Manager
             [
                 'headers' => $this->getHeaders(),
                 'verify'  => true,
-                'body'    => $body
+                'body'    => $body,
+                'timeout' => \CURL_TIMEOUT_IN_SECONDS
             ]
         );
 
@@ -214,7 +217,8 @@ class Manager
             [
                 'headers' => $this->getHeaders(),
                 'verify'  => true,
-                'body'    => $body
+                'body'    => $body,
+                'timeout' => \CURL_TIMEOUT_IN_SECONDS
             ]
         );
 
@@ -256,7 +260,8 @@ class Manager
             [
                 'headers' => $this->getHeaders(),
                 'verify'  => true,
-                'body'    => $body
+                'body'    => $body,
+                'timeout' => \CURL_TIMEOUT_IN_SECONDS
             ]
         );
         if ($res->getStatusCode() !== 200 || \mb_strlen((string)$res->getBody()) === 0) {
@@ -293,7 +298,8 @@ class Manager
             self::USER_API_URL,
             [
                 'headers' => $this->getHeaders(),
-                'verify'  => true
+                'verify'  => true,
+                'timeout' => \CURL_TIMEOUT_IN_SECONDS
             ]
         );
 

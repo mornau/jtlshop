@@ -188,7 +188,7 @@ class CheckoutController extends RegistrationController
         }
         if (isset($_GET['editLieferadresse'])) {
             // Shipping address and customer address are now on same site
-            $_GET['editRechnungsadresse'] = Request::getInt($_GET['editLieferadresse']);
+            $_GET['editRechnungsadresse'] = Request::getInt('editLieferadresse');
         }
         if (Request::postInt('unreg_form', -1) === 0) {
             $_POST['checkout'] = 1;

@@ -1,3 +1,4 @@
+{$cssNumPattern = "(\d*\.)?\d+(em|rem|px)?"}
 <div class="box-styles row">
     <div class="box-config col-8">
         <div class="outer-box">
@@ -7,14 +8,16 @@
                 </div>
                 <label class="mid-top-col">
                     <input id="margin-top-input" class="form-control" tabindex="1"
-                           name="{$propname}[margin-top]" value="{$propval['margin-top']|default:''|escape:'html'}">
+                           name="{$propname}[margin-top]" value="{$propval['margin-top']|default:''|escape:'html'}"
+                           pattern="{$cssNumPattern}">
                 </label>
                 <div class="one-third"></div>
             </div>
             <div class="mid-row">
                 <label>
                     <input id="margin-left-input" class="form-control" tabindex="4"
-                           name="{$propname}[margin-left]" value="{$propval['margin-left']|default:''|escape:'html'}">
+                           name="{$propname}[margin-left]" value="{$propval['margin-left']|default:''|escape:'html'}"
+                           pattern="{$cssNumPattern}">
                 </label>
                 <div class="border-box">
                     <div class="top-row">
@@ -24,7 +27,8 @@
                         <label class="mid-top-col">
                             <input id="border-top-input" class="form-control" tabindex="5"
                                    name="{$propname}[border-top-width]"
-                                   value="{$propval['border-top-width']|default:''|escape:'html'}">
+                                   value="{$propval['border-top-width']|default:''|escape:'html'}"
+                                   pattern="{$cssNumPattern}">
                         </label>
                         <div class="one-third"></div>
                     </div>
@@ -32,7 +36,8 @@
                         <label>
                             <input id="border-left-input" class="form-control" tabindex="8"
                                    name="{$propname}[border-left-width]"
-                                   value="{$propval['border-left-width']|default:''|escape:'html'}">
+                                   value="{$propval['border-left-width']|default:''|escape:'html'}"
+                                   pattern="{$cssNumPattern}">
                         </label>
                         <div class="padding-box">
                             <div class="top-row">
@@ -42,7 +47,8 @@
                                 <label class="mid-top-col">
                                     <input id="padding-top-input" class="form-control" tabindex="9"
                                            name="{$propname}[padding-top]"
-                                           value="{$propval['padding-top']|default:''|escape:'html'}">
+                                           value="{$propval['padding-top']|default:''|escape:'html'}"
+                                           pattern="{$cssNumPattern}">
                                 </label>
                                 <div class="one-third"></div>
                             </div>
@@ -50,43 +56,50 @@
                                 <label>
                                     <input id="padding-left-input" class="form-control" tabindex="12"
                                            name="{$propname}[padding-left]"
-                                           value="{$propval['padding-left']|default:''|escape:'html'}">
+                                           value="{$propval['padding-left']|default:''|escape:'html'}"
+                                           pattern="{$cssNumPattern}">
                                 </label>
                                 <div class="content-box"></div>
                                 <label>
                                     <input id="padding-right-input" class="form-control" tabindex="10"
                                            name="{$propname}[padding-right]"
-                                           value="{$propval['padding-right']|default:''|escape:'html'}">
+                                           value="{$propval['padding-right']|default:''|escape:'html'}"
+                                           pattern="{$cssNumPattern}">
                                 </label>
                             </div>
                             <label class="bottom-row">
                                 <input id="padding-bottom-input" class="form-control" tabindex="11"
                                        name="{$propname}[padding-bottom]"
-                                       value="{$propval['padding-bottom']|default:''|escape:'html'}">
+                                       value="{$propval['padding-bottom']|default:''|escape:'html'}"
+                                       pattern="{$cssNumPattern}">
                             </label>
                         </div>
                         <label>
                             <input id="border-right-input" class="form-control" tabindex="6"
                                    name="{$propname}[border-right-width]"
-                                   value="{$propval['border-right-width']|default:''|escape:'html'}">
+                                   value="{$propval['border-right-width']|default:''|escape:'html'}"
+                                   pattern="{$cssNumPattern}">
                         </label>
                     </div>
                     <label class="bottom-row">
                         <input id="border-bottom-input" class="form-control" tabindex="7"
                                name="{$propname}[border-bottom-width]"
-                               value="{$propval['border-bottom-width']|default:''|escape:'html'}">
+                               value="{$propval['border-bottom-width']|default:''|escape:'html'}"
+                               pattern="{$cssNumPattern}">
                     </label>
                 </div>
                 <label>
                     <input id="margin-right-input" class="form-control" tabindex="2"
                            name="{$propname}[margin-right]"
-                           value="{$propval['margin-right']|default:''|escape:'html'}">
+                           value="{$propval['margin-right']|default:''|escape:'html'}"
+                           pattern="{$cssNumPattern}">
                 </label>
             </div>
             <label class="bottom-row">
                 <input id="margin-bottom-input" class="form-control" tabindex="3"
                        name="{$propname}[margin-bottom]"
-                       value="{$propval['margin-bottom']|default:''|escape:'html'}">
+                       value="{$propval['margin-bottom']|default:''|escape:'html'}"
+                       pattern="{$cssNumPattern}">
             </label>
         </div>
     </div>

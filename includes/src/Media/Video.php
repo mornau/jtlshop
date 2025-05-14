@@ -80,10 +80,6 @@ class Video
      */
     protected array $extraGetArgs = [];
 
-    /**
-     * @param string $url
-     * @return self
-     */
     public static function fromUrl(string $url): self
     {
         return new self($url);
@@ -102,6 +98,11 @@ class Video
         } elseif (!empty($mediaFile->cURL)) {
             $url   = $mediaFile->cURL;
             $video = self::fromUrl($url);
+
+            if ($video->getType() === self::TYPE_FILE) {
+                // not a real video file when nMedienTyp !== 3
+                return null;
+            }
         } else {
             return null;
         }

@@ -792,7 +792,16 @@ class Plugins
      */
     public function getDecimalLength(array $params): int
     {
-        $portion = \strrchr(\str_replace(',', '.', $params['quantity']), '.');
+        if (is_numeric($params['quantity'] ?? '')) {
+            $quantity = (string)$params['quantity'];
+        } else {
+            $quantity = \str_replace(['.', ','], ['', '.'], ($params['quantity'] ?? ''));
+            if (!is_numeric($quantity)) {
+                return 0;
+            }
+        }
+
+        $portion = \strrchr($quantity, '.');
         if ($portion === false) {
             $portion = '';
         }

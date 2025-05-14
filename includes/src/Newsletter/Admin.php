@@ -693,6 +693,11 @@ final class Admin
                 WHERE kNewsletterEmpfaenger' . $where
         );
         foreach ($recipients as $recipient) {
+            $recipient->kNewsletterEmpfaenger = (int)$recipient->kNewsletterEmpfaenger;
+            $recipient->kSprache              = (int)$recipient->kSprache;
+            $recipient->kKunde                = (int)$recipient->kKunde;
+            $recipient->nAktiv                = (int)$recipient->nAktiv;
+
             $hist               = new stdClass();
             $hist->kSprache     = $recipient->kSprache;
             $hist->kKunde       = $recipient->kKunde;
@@ -742,6 +747,11 @@ final class Admin
                 WHERE kNewsletterEmpfaenger' . $where
         );
         foreach ($recipients as $recipient) {
+            $recipient->kNewsletterEmpfaenger = (int)$recipient->kNewsletterEmpfaenger;
+            $recipient->kSprache              = (int)$recipient->kSprache;
+            $recipient->kKunde                = (int)$recipient->kKunde;
+            $recipient->nAktiv                = (int)$recipient->nAktiv;
+
             $hist               = new stdClass();
             $hist->kSprache     = $recipient->kSprache;
             $hist->kKunde       = $recipient->kKunde;
@@ -832,9 +842,14 @@ final class Admin
                 $searchSQL->getParams()
             )
         )->map(static function (stdClass $item): stdClass {
-            $item->cVorname  = Text::filterXSS($item->cVorname);
-            $item->cNachname = Text::filterXSS($item->cNachname);
-            $item->cEmail    = Text::filterXSS($item->cEmail);
+            $item->kNewsletterEmpfaenger = (int)$item->kNewsletterEmpfaenger;
+            $item->kSprache              = (int)$item->kSprache;
+            $item->kKunde                = (int)$item->kKunde;
+            $item->nAktiv                = (int)$item->nAktiv;
+            $item->kKundengruppe         = (int)$item->kKundengruppe;
+            $item->cVorname              = Text::filterXSS($item->cVorname);
+            $item->cNachname             = Text::filterXSS($item->cNachname);
+            $item->cEmail                = Text::filterXSS($item->cEmail);
 
             return $item;
         })->toArray();

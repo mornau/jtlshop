@@ -114,6 +114,7 @@ if (strlen($cSh) > 0) {
             if ($paymentMethod->finalizeOrder($order, $sessionHash, $_REQUEST)) {
                 $logger->debug('Session Hash: {hash} ergab finalizeOrder passed', ['hash' => $cSh]);
                 $order = $orderHandler->finalizeOrder($order->cBestellNr ?? '');
+                $orderHandler->saveUploads($order);
                 $session->cleanUp();
 
                 if ($order->kBestellung > 0) {

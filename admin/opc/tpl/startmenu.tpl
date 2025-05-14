@@ -9,14 +9,7 @@
         {$curPageId = ''}
     {/if}
 
-    {$publicDraft       = $opcPageService->getPublicPage($curPageId)}
-
-    {if $publicDraft === null}
-        {$publicDraftKey = 0}
-    {else}
-        {$publicDraftKey = $publicDraft->getKey()}
-    {/if}
-
+    {$publicDraftKeys   = $opcPageService->getPublicPageKeys($curPageId)}
     {$pageDrafts        = $opcPageService->getDrafts($curPageId)}
     {$adminSessionToken = $opc->getAdminSessionToken()}
     {$languages         = $smarty.session.Sprachen}

@@ -2023,80 +2023,23 @@ msgstr "Hinweis auf Gratisgeschenke im Warenkorb anzeigen"
 msgid "sonstiges_gratisgeschenk_wk_hinweis_anzeigen_desc"
 msgstr "Aktivieren Sie diese Option, damit Ihre Kunden im Warenkorb sehen, dass Sie ein Gratisgeschenk wählen können."
 
-msgid "zahlungsart_ueberweisung_min_bestellungen_name"
+msgid "zahlungsart_min_bestellungen_name"
 msgstr "Anzahl nötiger Bestellungen"
 
-msgid "zahlungsart_ueberweisung_min_bestellungen_desc"
+msgid "zahlungsart_min_bestellungen_desc"
 msgstr "Hier legen Sie fest, wie oft ein Kunde mindestens bei Ihnen bestellt haben muss, "
 "damit ihm diese Zahlungsart angeboten wird."
 
-msgid "zahlungsart_ueberweisung_min_name"
+msgid "zahlungsart_min_name"
 msgstr "Mindestbestellwert"
 
-msgid "zahlungsart_ueberweisung_min_desc"
+msgid "zahlungsart_min_desc"
 msgstr "Hier legen Sie fest, wie hoch der Warenkorbwert mindestens sein muss, damit eine Zahlungsart angeboten wird."
 
-msgid "zahlungsart_ueberweisung_max_name"
+msgid "zahlungsart_max_name"
 msgstr "Maximaler Bestellwert"
 
-msgid "zahlungsart_ueberweisung_max_desc"
-msgstr "Hier legen Sie fest, bis zu welchem Warenkorbwert eine Zahlungsart angeboten wird."
-
-msgid "zahlungsart_nachnahme_min_bestellungen_name"
-msgstr "Anzahl nötiger Bestellungen"
-
-msgid "zahlungsart_nachnahme_min_bestellungen_desc"
-msgstr "Hier legen Sie fest, wie oft ein Kunde mindestens bei Ihnen bestellt haben muss, "
-"damit ihm diese Zahlungsart angeboten wird."
-
-msgid "zahlungsart_nachnahme_min_name"
-msgstr "Mindestbestellwert"
-
-msgid "zahlungsart_nachnahme_min_desc"
-msgstr "Hier legen Sie fest, wie hoch der Warenkorbwert mindestens sein muss, damit eine Zahlungsart angeboten wird."
-
-msgid "zahlungsart_nachnahme_max_name"
-msgstr "Maximaler Bestellwert"
-
-msgid "zahlungsart_nachnahme_max_desc"
-msgstr "Hier legen Sie fest, bis zu welchem Warenkorbwert eine Zahlungsart angeboten wird."
-
-msgid "zahlungsart_rechnung_min_bestellungen_name"
-msgstr "Anzahl nötiger Bestellungen"
-
-msgid "zahlungsart_rechnung_min_bestellungen_desc"
-msgstr "Hier legen Sie fest, wie oft ein Kunde mindestens bei Ihnen bestellt haben muss, "
-"damit ihm diese Zahlungsart angeboten wird."
-
-msgid "zahlungsart_rechnung_min_name"
-msgstr "Mindestbestellwert"
-
-msgid "zahlungsart_rechnung_min_desc"
-msgstr "Hier legen Sie fest, wie hoch der Warenkorbwert mindestens sein muss, damit eine Zahlungsart angeboten wird."
-
-msgid "zahlungsart_rechnung_max_name"
-msgstr "Maximaler Bestellwert"
-
-msgid "zahlungsart_rechnung_max_desc"
-msgstr "Hier legen Sie fest, bis zu welchem Warenkorbwert eine Zahlungsart angeboten wird."
-
-msgid "zahlungsart_lastschrift_min_bestellungen_name"
-msgstr "Anzahl nötiger Bestellungen"
-
-msgid "zahlungsart_lastschrift_min_bestellungen_desc"
-msgstr "Hier legen Sie fest, wie oft ein Kunde mindestens bei Ihnen bestellt haben muss, "
-"damit ihm diese Zahlungsart angeboten wird."
-
-msgid "zahlungsart_lastschrift_min_name"
-msgstr "Mindestbestellwert"
-
-msgid "zahlungsart_lastschrift_min_desc"
-msgstr "Hier legen Sie fest, wie hoch der Warenkorbwert mindestens sein muss, damit eine Zahlungsart angeboten wird."
-
-msgid "zahlungsart_lastschrift_max_name"
-msgstr "Maximaler Bestellwert"
-
-msgid "zahlungsart_lastschrift_max_desc"
+msgid "zahlungsart_max_desc"
 msgstr "Hier legen Sie fest, bis zu welchem Warenkorbwert eine Zahlungsart angeboten wird."
 
 msgid "zahlungsart_lastschrift_bic_abfrage_name"
@@ -2116,25 +2059,6 @@ msgstr "Kreditinstitut abfragen"
 
 msgid "zahlungsart_lastschrift_kreditinstitut_abfrage_desc"
 msgstr "Hier legen Sie fest, ob das Kreditinstitut abgefragt werden soll."
-
-msgid "zahlungsart_barzahlung_min_bestellungen_name"
-msgstr "Anzahl nötiger Bestellungen"
-
-msgid "zahlungsart_barzahlung_min_bestellungen_desc"
-msgstr "Hier legen Sie fest, wie oft ein Kunde mindestens bei Ihnen bestellt haben muss, "
-"damit ihm diese Zahlungsart angeboten wird."
-
-msgid "zahlungsart_barzahlung_min_name"
-msgstr "Mindestbestellwert"
-
-msgid "zahlungsart_barzahlung_min_desc"
-msgstr "Hier legen Sie fest, wie hoch der Warenkorbwert mindestens sein muss, damit eine Zahlungsart angeboten wird."
-
-msgid "zahlungsart_barzahlung_max_name"
-msgstr "Maximaler Bestellwert"
-
-msgid "zahlungsart_barzahlung_max_desc"
-msgstr "Hier legen Sie fest, bis zu welchem Warenkorbwert eine Zahlungsart angeboten wird."
 
 msgid "exportformate_lager_ueber_null_name"
 msgstr "Nur Artikel mit Lagerbestand über 0"

@@ -91,9 +91,8 @@ final class MailTemplates extends AbstractItem
                     return InstallCode::INVALID_EMAIL_TEMPLATE_ISO;
                 }
             } elseif (\mb_strlen($hits2[0]) === \mb_strlen($l)) {
-                \preg_match('/[a-zA-Z\d\/_\-.#: ]+/', $localized['Subject'], $hits1);
                 $len = \mb_strlen($localized['Subject']);
-                if ($len === 0 || \mb_strlen($hits1[0]) !== $len) {
+                if ($len === 0) {
                     return InstallCode::INVALID_EMAIL_TEMPLATE_SUBJECT;
                 }
             }

@@ -57,7 +57,7 @@ class MailTemplates extends AbstractItem
                 return InstallCode::SQL_CANNOT_SAVE_EMAIL_TEMPLATE;
             }
             $iso                    = '';
-            $allLanguages           = LanguageHelper::getAllLanguages(2, true);
+            $allLanguages           = LanguageHelper::getAllLanguages(2, true, true);
             $fallbackLocalization   = null;
             $availableLocalizations = [];
             $addedLanguages         = [];

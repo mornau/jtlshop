@@ -913,6 +913,7 @@
 #opc .row-layout-previews {
   text-align: center;
   color: #BDBDBD;
+  margin-bottom: 16px;
 }
 #opc .row-layout-previews > * {
   display: inline-block;

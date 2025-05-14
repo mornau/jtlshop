@@ -9,6 +9,8 @@ use JTL\Backend\Revision;
 use JTL\DB\DbInterface;
 use JTL\Events\Dispatcher;
 use JTL\Events\Event;
+use JTL\Helpers\Text;
+use JTL\Session\Frontend;
 use JTL\Update\Updater;
 use stdClass;
 
@@ -107,18 +109,23 @@ class PageDB
 
     /**
      * @param string $id
-     * @return null|stdClass
+     * @param int $customerGroupId
+     * @return stdClass|null
      */
-    public function getPublicPageRow(string $id): ?stdClass
+    public function getPublicPageRow(string $id, int $customerGroupId = 0): ?stdClass
     {
+        if ($customerGroupId === 0) {
+            $customerGroupId = Frontend::getCustomerGroup()->getID();
+        }
         $res = $this->shopDB->getSingleObject(
             'SELECT * FROM topcpage
                 WHERE cPageId = :pageID
                     AND dPublishFrom IS NOT NULL
                     AND dPublishFrom <= NOW()
                     AND (dPublishTo > NOW() OR dPublishTo IS NULL)
+                    AND (customerGroups IS NULL OR customerGroups LIKE :curCustomerGroupLike)
                 ORDER BY dPublishFrom DESC',
-            ['pageID' => $id]
+            ['pageID' => $id, 'curCustomerGroupLike' => '%;' . $customerGroupId . ';%']
         );
         if ($res !== null) {
             $res->kPage = (int)$res->kPage;
@@ -193,6 +200,38 @@ class PageDB
         ]);
 
         return $page;
+    }
+
+    /**
+     * @param string $id
+     * @param object[] $customerGroups
+     * @return Page[]
+     * @throws Exception
+     */
+    public function getPublicPages(string $id, array $customerGroups): array
+    {
+        $pageKeys = [];
+        $pages    = [];
+
+        foreach ($customerGroups as $customerGroup) {
+            $row = $this->getPublicPageRow($id, (int)$customerGroup->id);
+
+            if ($row !== null) {
+                $page = $this->getPageFromRow($row);
+
+                if (!\in_array($page->getKey(), $pageKeys)) {
+                    Dispatcher::getInstance()->fire(Event::OPC_PAGEDB_GETPUBLICPAGE, [
+                        'id' => $id,
+                        'page' => &$page
+                    ]);
+
+                    $pageKeys[] = $page->getKey();
+                    $pages[]    = $page;
+                }
+            }
+        }
+
+        return $pages;
     }
 
     /**
@@ -295,15 +334,16 @@ class PageDB
         $page->setLastModified(\date('Y-m-d H:i:s'));
 
         $pageDB = (object)[
-            'cPageId'       => $page->getId(),
-            'dPublishFrom'  => $page->getPublishFrom() ?? '_DBNULL_',
-            'dPublishTo'    => $page->getPublishTo() ?? '_DBNULL_',
-            'cName'         => $page->getName(),
-            'cPageUrl'      => $page->getUrl(),
-            'cAreasJson'    => \json_encode($page->getAreaList(), \JSON_THROW_ON_ERROR),
-            'dLastModified' => $page->getLastModified() ?? '_DBNULL_',
-            'cLockedBy'     => $page->getLockedBy(),
-            'dLockedAt'     => $page->getLockedAt() ?? '_DBNULL_',
+            'cPageId'        => $page->getId(),
+            'dPublishFrom'   => $page->getPublishFrom() ?? '_DBNULL_',
+            'dPublishTo'     => $page->getPublishTo() ?? '_DBNULL_',
+            'cName'          => $page->getName(),
+            'cPageUrl'       => $page->getUrl(),
+            'cAreasJson'     => \json_encode($page->getAreaList(), \JSON_THROW_ON_ERROR),
+            'dLastModified'  => $page->getLastModified() ?? '_DBNULL_',
+            'cLockedBy'      => $page->getLockedBy(),
+            'dLockedAt'      => $page->getLockedAt() ?? '_DBNULL_',
+            'customerGroups' => $page->getCustomerGroups() ?? '_DBNULL_',
         ];
 
         if ($page->getKey() > 0) {
@@ -361,10 +401,17 @@ class PageDB
      */
     public function saveDraftPublicationStatus(Page $page): self
     {
+        $customerGroups = $page->getCustomerGroups();
+        if (\is_array($customerGroups) && \count($customerGroups) > 0) {
+            $customerGroups = Text::createSSK($customerGroups);
+        } else {
+            $customerGroups = null;
+        }
         $pageDB = (object)[
-            'dPublishFrom' => $page->getPublishFrom() ?? '_DBNULL_',
-            'dPublishTo'   => $page->getPublishTo() ?? '_DBNULL_',
-            'cName'        => $page->getName(),
+            'dPublishFrom'   => $page->getPublishFrom() ?? '_DBNULL_',
+            'dPublishTo'     => $page->getPublishTo() ?? '_DBNULL_',
+            'cName'          => $page->getName(),
+            'customerGroups' => $customerGroups ?? '_DBNULL_',
         ];
 
         if ($this->shopDB->update('topcpage', 'kPage', $page->getKey(), $pageDB) === -1) {
@@ -422,7 +469,10 @@ class PageDB
      */
     protected function getPageFromRow(stdClass $row): Page
     {
-        $page = (new Page())
+        $customerGroups = !empty($row->customerGroups)
+            ? \array_values(Text::parseSSKint($row->customerGroups))
+            : null;
+        $page           = (new Page())
             ->setKey((int)$row->kPage)
             ->setId($row->cPageId)
             ->setPublishFrom($row->dPublishFrom)
@@ -431,7 +481,8 @@ class PageDB
             ->setUrl($row->cPageUrl)
             ->setLastModified($row->dLastModified)
             ->setLockedBy($row->cLockedBy)
-            ->setLockedAt($row->dLockedAt);
+            ->setLockedAt($row->dLockedAt)
+            ->setCustomerGroups($customerGroups);
 
         $areaData = \json_decode($row->cAreasJson, true, 512, \JSON_THROW_ON_ERROR);
 

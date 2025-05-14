@@ -20,7 +20,7 @@ final class TopOffers extends AbstractBox
         parent::__construct($config);
         $this->setShow(false);
         $customerGroupID = Frontend::getCustomerGroup()->getID();
-        if ($customerGroupID <= 0 || Frontend::getCustomerGroup()->mayViewCategories()) {
+        if ($customerGroupID <= 0 || !Frontend::getCustomerGroup()->mayViewCategories()) {
             return;
         }
         $cacheTags      = [\CACHING_GROUP_BOX, \CACHING_GROUP_ARTICLE];

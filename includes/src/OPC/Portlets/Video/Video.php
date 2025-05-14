@@ -22,9 +22,9 @@ class Video extends Portlet
     public function initInstance(PortletInstance $instance)
     {
         if ($instance->getProperty('video-vendor') === 'youtube') {
-            $instance->video = \JTL\Media\Video::fromUrl(
-                'https://www.youtube.com/?v=' . $instance->getProperty('video-yt-id')
-            );
+            /** @var string $id */
+            $id              = $instance->getProperty('video-yt-id');
+            $instance->video = \JTL\Media\Video::fromUrl('https://www.youtube.com/?v=' . $id);
             /** @var int|string $start */
             $start = $instance->getProperty('video-yt-start');
             /** @var int|string $end */
@@ -50,9 +50,7 @@ class Video extends Portlet
             $id = $instance->getProperty('video-vim-id');
             /** @var int|numeric-string $loop */
             $loop            = $instance->getProperty('video-vim-loop');
-            $instance->video = \JTL\Media\Video::fromUrl(
-                'https://vimeo.com/' . $id
-            );
+            $instance->video = \JTL\Media\Video::fromUrl('https://vimeo.com/' . $id);
             $instance->video->setLoop((bool)$loop === true);
         } else {
             /** @var string $url */

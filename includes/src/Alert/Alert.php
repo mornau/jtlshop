@@ -404,7 +404,7 @@ class Alert
     /**
      * remove Alert from Session
      */
-    private function removeFromSession(): void
+    public function removeFromSession(): void
     {
         if (isset($_SESSION['alerts'][$this->getKey()])) {
             unset($_SESSION['alerts'][$this->getKey()]);

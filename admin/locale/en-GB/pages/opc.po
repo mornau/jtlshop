@@ -65,6 +65,21 @@ msgstr "Blueprint name"
 msgid "Delete Blueprint?"
 msgstr "Delete blueprint?"
 
+msgid "setDisplayWidthXS"
+msgstr "Constrain viewport width to 375px (XS)"
+
+msgid "setDisplayWidthSM"
+msgstr "Constrain viewport width to 577px (SM)"
+
+msgid "setDisplayWidthMD"
+msgstr "Constrain viewport width to 769px (MD)"
+
+msgid "setDisplayWidthLG"
+msgstr "Constrain viewport width to 993px (LG)"
+
+msgid "setDisplayWidthXL"
+msgstr "Do not constrain viewport width (XL)"
+
 # Config Tabs
 
 msgid "Styles"
@@ -276,6 +291,15 @@ msgstr "Select period"
 
 msgid "indefinitePeriodOfTime"
 msgstr "For indefinite period"
+
+msgid "restrictedToCustomerGroups"
+msgstr "Visible for …"
+
+msgid "restrictedTo"
+msgstr "Visible for"
+
+msgid "visibleForAllGroups"
+msgstr "Visible for all customer groups"
 
 msgid "draftUpper"
 msgstr "DRAFT"

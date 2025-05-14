@@ -197,33 +197,34 @@ class OptinNewsletter extends OptinBase implements OptinInterface
 
         $optinCode  = self::ACTIVATE_CODE . $this->optCode;
         $recicpient = $this->dbHandler->select('tnewsletterempfaenger', 'cOptCode', $optinCode);
-        if (isset($recicpient->kNewsletterEmpfaenger) && $recicpient->kNewsletterEmpfaenger > 0) {
-            \executeHook(
-                \HOOK_NEWSLETTER_PAGE_EMPFAENGERFREISCHALTEN,
-                ['oNewsletterEmpfaenger' => $recicpient]
-            );
-            $this->dbHandler->update(
-                'tnewsletterempfaenger',
-                'kNewsletterEmpfaenger',
-                (int)$recicpient->kNewsletterEmpfaenger,
-                (object)['nAktiv' => 1]
-            );
-            $this->dbHandler->query(
-                'UPDATE tnewsletterempfaenger, tkunde
+        if (!isset($recicpient->kNewsletterEmpfaenger) || $recicpient->kNewsletterEmpfaenger <= 0) {
+            return;
+        }
+        \executeHook(
+            \HOOK_NEWSLETTER_PAGE_EMPFAENGERFREISCHALTEN,
+            ['oNewsletterEmpfaenger' => $recicpient]
+        );
+        $this->dbHandler->update(
+            'tnewsletterempfaenger',
+            'kNewsletterEmpfaenger',
+            (int)$recicpient->kNewsletterEmpfaenger,
+            (object)['nAktiv' => 1]
+        );
+        $this->dbHandler->query(
+            'UPDATE tnewsletterempfaenger, tkunde
                 SET tnewsletterempfaenger.kKunde = tkunde.kKunde
                 WHERE tkunde.cMail = tnewsletterempfaenger.cEmail
                     AND tnewsletterempfaenger.kKunde = 0'
-            );
-            $upd           = new stdClass();
-            $upd->dOptCode = 'NOW()';
-            $upd->cOptIp   = Request::getRealIP();
-            $this->dbHandler->update(
-                'tnewsletterempfaengerhistory',
-                ['cOptCode', 'cAktion'],
-                [$optinCode, 'Eingetragen'],
-                $upd
-            );
-        }
+        );
+        $upd           = new stdClass();
+        $upd->dOptCode = 'NOW()';
+        $upd->cOptIp   = Request::getRealIP();
+        $this->dbHandler->update(
+            'tnewsletterempfaengerhistory',
+            ['cOptCode', 'cAktion'],
+            [$optinCode, 'Eingetragen'],
+            $upd
+        );
     }
 
     /**
@@ -328,6 +329,9 @@ class OptinNewsletter extends OptinBase implements OptinInterface
      */
     public function bulkActivateOptins(array $optins): void
     {
+        $realIP     = Request::getRealIP();
+        $languageID = Shop::getLanguageID();
+        $groupID    = Frontend::getCustomer()->getGroupID();
         foreach ($optins as $singleOptin) {
             $this->setCode($singleOptin->cOptCode);
             $this->refData = (new OptinRefData())
@@ -336,18 +340,16 @@ class OptinNewsletter extends OptinBase implements OptinInterface
                 ->setLastName($singleOptin->cNachname)
                 ->setEmail($singleOptin->cEmail)
                 ->setCustomerID($singleOptin->kKunde)
-                ->setCustomerGroupID(Frontend::getCustomer()->getGroupID())
-                ->setLanguageID(Shop::getLanguageID())
-                ->setRealIP(Request::getRealIP());
+                ->setCustomerGroupID($groupID)
+                ->setLanguageID($singleOptin->kSprache ?? $languageID)
+                ->setRealIP($realIP);
             $this->saveOptin($this->optCode);
-
             $this->loadOptin();
             parent::activateOptin();
-
-            // update the history too, because some values, displayed in the backend NL overview, are depends on it
-            $upd           = new stdClass();
-            $upd->dOptCode = 'NOW()';
-            $upd->cOptIp   = Request::getRealIP();
+            $upd = (object)[
+                'dOptCode' => 'NOW()',
+                'cOptIp'   => $realIP
+            ];
             $this->dbHandler->update(
                 'tnewsletterempfaengerhistory',
                 ['cOptCode', 'cAktion'],

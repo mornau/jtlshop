@@ -264,17 +264,11 @@ class BaseSearchQuery extends AbstractFilter
                       MIN(tsuchcachetreffer.nSort) AS nSort
                           FROM tsuchcachetreffer
                           WHERE tsuchcachetreffer.kSuchCache IN (' . \implode(',', $searchCacheIDs) . ') 
-                          #JOIN tsuchcache
-                          #    ON tsuchcachetreffer.kSuchCache = tsuchcache.kSuchCache
-                          #JOIN tsuchanfrage
-                          #    ON tsuchanfrage.cSuche = tsuchcache.cSuche
-                          #    AND tsuchanfrage.kSuchanfrage IN (' . \implode(',', $searchCacheIDs) . ') 
                           GROUP BY tsuchcachetreffer.kArtikel
                           HAVING COUNT(*) = ' . $count . '
                       ) AS jSuche'
             )
             ->setOn('jSuche.kArtikel = tartikel.kArtikel')
-            ->setComment('JOIN1 from ' . __METHOD__)
             ->setOrigin(__CLASS__);
     }
 
@@ -301,7 +295,6 @@ class BaseSearchQuery extends AbstractFilter
         $sql->setGroupBy(['tsuchanfrage.kSuchanfrage', 'tartikel.kArtikel']);
         $sql->addJoin(
             (new Join())
-                ->setComment('JOIN1 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tsuchcachetreffer')
                 ->setOn('tartikel.kArtikel = tsuchcachetreffer.kArtikel')
@@ -309,7 +302,6 @@ class BaseSearchQuery extends AbstractFilter
         );
         $sql->addJoin(
             (new Join())
-                ->setComment('JOIN2 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tsuchcache')
                 ->setOn('tsuchcache.kSuchCache = tsuchcachetreffer.kSuchCache')
@@ -317,7 +309,6 @@ class BaseSearchQuery extends AbstractFilter
         );
         $sql->addJoin(
             (new Join())
-                ->setComment('JOIN3 from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('tsuchanfrage')
                 ->setOn(

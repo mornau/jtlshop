@@ -169,17 +169,13 @@
 
     function disableUpdateControl(disable)
     {
-        var $container = $('#btn-update-group'),
-            $buttons = $('#btn-update-group a.btn'),
-            $ladda = Ladda.create($('#backup-button')[0]),
+        var $buttons = $('#btn-update-group a.btn'),
             $resultLog = $('#resultLog');
 
         if (!!disable) {
-            $ladda.start();
             $buttons.attr('disabled', true);
             $resultLog.show();
         } else {
-            $ladda.stop();
             $buttons.attr('disabled', false);
         }
     }

@@ -176,6 +176,31 @@ class PageService
     }
 
     /**
+     * @param string $id
+     * @return Page[]
+     * @throws Exception
+     */
+    public function getPublicPages(string $id): array
+    {
+        return $this->pageDB->getPublicPages($id, $this->opc->getCustomerGroups());
+    }
+
+    /**
+     * @param string $id
+     * @return int[]
+     * @throws Exception
+     */
+    public function getPublicPageKeys(string $id): array
+    {
+        $keys = [];
+        foreach ($this->getPublicPages($id) as $page) {
+            $keys[] = $page->getKey();
+        }
+
+        return $keys;
+    }
+
+    /**
      * @return Page
      * @throws Exception
      */
@@ -332,11 +357,10 @@ class PageService
         if (!$this->opc->isOPCInstalled()) {
             return [];
         }
-        $drafts         = $this->pageDB->getDrafts($id);
-        $publicDraft    = $this->getPublicPage($id);
-        $publicDraftKey = $publicDraft === null ? 0 : $publicDraft->getKey();
-        \usort($drafts, static function (Page $a, Page $b) use ($publicDraftKey): int {
-            return $a->getStatus($publicDraftKey) - $b->getStatus($publicDraftKey);
+        $drafts          = $this->pageDB->getDrafts($id);
+        $publicDraftKeys = $this->getPublicPageKeys($id);
+        \usort($drafts, static function (Page $a, Page $b) use ($publicDraftKeys): int {
+            return $a->getStatus($publicDraftKeys) - $b->getStatus($publicDraftKeys);
         });
 
         return $drafts;

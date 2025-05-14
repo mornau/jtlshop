@@ -188,7 +188,6 @@ class BaseManufacturer extends AbstractFilter
         $sql->setGroupBy(['tartikel.kArtikel']);
         $sql->addJoin(
             (new Join())
-                ->setComment('JOIN from ' . __METHOD__)
                 ->setType('JOIN')
                 ->setTable('thersteller')
                 ->setOn('tartikel.kHersteller = thersteller.kHersteller')

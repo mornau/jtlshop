@@ -30,7 +30,7 @@ msgstr "Hier legen Sie die Transparenz des Wasserzeichens in Prozent fest. Wir e
 
 msgid "brandingSizeDesc"
 msgstr "Hier geben Sie die Größe des Wasserzeichens in Prozent im Verhältnis zum Gesamtbild ein. "
-"Wir empfehlen einen Wert von 30. 0 skaliert das Wasserzeichen gar nicht und fügt es in der Original-Bildgröße ein."
+"Wir empfehlen einen Wert von 30."
 
 msgid "brandingFileName"
 msgstr "Datei für Wasserzeichen"

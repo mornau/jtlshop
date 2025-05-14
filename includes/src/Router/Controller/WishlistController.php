@@ -19,7 +19,6 @@ use JTL\Smarty\JTLSmarty;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use stdClass;
 
 /**
  * Class WishlistController
@@ -320,16 +319,7 @@ class WishlistController extends AbstractController
             && \mb_convert_case($campaign->cWert, \MB_CASE_LOWER) ===
             \strtolower(Request::verifyGPDataString($campaign->cParameter))
         ) {
-            $event               = new stdClass();
-            $event->kKampagne    = $campaign->kKampagne;
-            $event->kKampagneDef = \KAMPAGNE_DEF_HIT;
-            $event->kKey         = $_SESSION['oBesucher']->kBesucher ?? 0;
-            $event->fWert        = 1.0;
-            $event->cParamWert   = $campaign->cWert;
-            $event->dErstellt    = 'NOW()';
-
-            $this->db->insert('tkampagnevorgang', $event);
-            $_SESSION['Kampagnenbesucher'][$campaign->kKampagne] = $campaign;
+            $campaign->trackHit($_SESSION['oBesucher']->kBesucher ?? 0);
         }
     }
 

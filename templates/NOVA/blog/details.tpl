@@ -186,11 +186,11 @@
                                     {block name='blog-details-comments'}
                                         {listgroup class="blog-details-comments-list list-group-flush"}
                                             {foreach $comments as $comment}
-                                                {listgroupitem class="blog-details-comments-list-item" itemprop="comment"}
-                                                    <p>
-                                                        {$comment->getName()}, {$comment->getDateCreated()->format('d.m.y H:i')}
-                                                    </p>
-                                                    {$comment->getText()}
+                                                {listgroupitem class="blog-details-comments-list-item" itemprop="comment" itemscope=true itemtype="https://schema.org/Comment"}
+                                                    <div itemprop="text">
+                                                        <p>{$comment->getName()}, {$comment->getDateCreated()->format('d.m.y H:i')}</p>
+                                                        {$comment->getText()}
+                                                    </div>
                                                      {foreach $comment->getChildComments() as $childComment}
                                                         <div class="review-reply">
                                                             <span class="subheadline">{lang key='commentReply' section='news'}:</span>

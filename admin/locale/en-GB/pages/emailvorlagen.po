@@ -243,6 +243,9 @@ msgstr "Back in stock notification email (double opt-in confirmation)"
 msgid "Empty mail body"
 msgstr "Empty email body"
 
+msgid "Check all templates"
+msgstr "Alle Vorlagen prüfen"
+
 msgid "Check syntax"
 msgstr "Check email syntax"
 

@@ -44,7 +44,7 @@ class MailRepository extends AbstractDBRepository
      */
     public function insertMail(DataTableObjectInterface $insertDTO): int
     {
-        return $this->getDB()->insertRow($this->getTableName(), $insertDTO->toObject());
+        return $this->getDB()->insertRow($this->getTableName(), $insertDTO->toObject(true, true));
     }
 
     /**

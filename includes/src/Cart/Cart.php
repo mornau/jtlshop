@@ -644,22 +644,22 @@ class Cart
         $cartItem->cResponsibility = $responsibility;
         $cartItem->kKonfigitem     = $configItemID;
         $cartItem->kArtikel        = $productID;
-        //fixes #4967
-        if (\is_object($_SESSION['Kundengruppe']) && Frontend::getCustomerGroup()->isMerchant()) {
-            if ($grossPrice) {
-                $cartItem->fPreis = $price / (100 + Tax::getSalesTax($taxClassID)) * 100.0;
+        if ($price !== null) {
+            if (\is_object($_SESSION['Kundengruppe']) && Frontend::getCustomerGroup()->isMerchant()) {
+                if ($grossPrice) {
+                    $cartItem->fPreis = $price / (100 + Tax::getSalesTax($taxClassID)) * 100.0;
+                }
+                //round net price
+                $cartItem->fPreis = \round($cartItem->fPreis, 2);
+            } elseif ($grossPrice) {
+                //calculate net price based on rounded gross price
+                $cartItem->fPreis = \round($price, 2) / (100 + Tax::getSalesTax($taxClassID)) * 100.0;
+            } else {
+                //calculate rounded gross price then calculate net price again.
+                $cartItem->fPreis = \round($price * (100 + Tax::getSalesTax($taxClassID)) / 100, 2) /
+                    (100 + Tax::getSalesTax($taxClassID)) * 100.0;
             }
-            //round net price
-            $cartItem->fPreis = \round($cartItem->fPreis, 2);
-        } elseif ($grossPrice) {
-            //calculate net price based on rounded gross price
-            $cartItem->fPreis = \round($price, 2) / (100 + Tax::getSalesTax($taxClassID)) * 100.0;
-        } else {
-            //calculate rounded gross price then calculate net price again.
-            $cartItem->fPreis = \round($price * (100 + Tax::getSalesTax($taxClassID)) / 100, 2) /
-                (100 + Tax::getSalesTax($taxClassID)) * 100.0;
         }
-
         $cartItem->fPreisEinzelNetto = $cartItem->fPreis;
         if ($type === \C_WARENKORBPOS_TYP_KUPON && isset($name->cName)) {
             $cartItem->cName = \is_array($name->cName)
@@ -809,7 +809,7 @@ class Cart
         $count = 0;
         foreach ($this->PositionenArr as $item) {
             if (
-                \in_array($item->nPosTyp, $itemTypes)
+                \in_array($item->nPosTyp, $itemTypes, true)
                 && (empty($item->cUnique) || (\mb_strlen($item->cUnique) > 0 && $item->kKonfigitem === 0))
                 && $item->isUsedForShippingCostCalculation($iso, $excludeShippingCostAttributes)
             ) {
@@ -959,6 +959,10 @@ class Cart
                 $item->setzeGesamtpreisLocalized();
             }
             $this->setzeKonfig($item, true, false);
+            \executeHook(\HOOK_SET_POSITION_PRICES_END, [
+                'position'    => &$item,
+                'oldPosition' => $oldItem
+            ]);
         }
 
         return $this;
@@ -1002,7 +1006,7 @@ class Cart
     public function setzeKonfig(CartItem $item, bool $prices = true, bool $name = true): self
     {
         // Falls Konfigitem gesetzt Preise + Name ueberschreiben
-        if ($item->kKonfigitem <= 0 || !\class_exists('Konfigitem')) {
+        if ($item->kKonfigitem <= 0) {
             return $this;
         }
         $configItem = new Item($item->kKonfigitem);
@@ -1201,7 +1205,7 @@ class Cart
         $currency = $this->Waehrung ?? Frontend::getCurrency();
         $factor   = $currency->getConversionFactor();
         foreach ($this->PositionenArr as $item) {
-            if (\in_array($item->nPosTyp, $types)) {
+            if (\in_array($item->nPosTyp, $types, true)) {
                 continue;
             }
             if ($gross) {

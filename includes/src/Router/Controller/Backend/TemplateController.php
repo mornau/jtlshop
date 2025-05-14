@@ -423,7 +423,7 @@ class TemplateController extends AbstractBackendController
             $this->alertService->addError(\__('errorTemplateSave'), 'errorTemplateSave');
         }
         $this->db->query('UPDATE tglobals SET dLetzteAenderung = NOW()');
-        $this->cache->flushTags([\CACHING_GROUP_LICENSES]);
+        $this->cache->flushTags([\CACHING_GROUP_LICENSES, \CACHING_GROUP_RECOMMENDATIONS]);
     }
 
     /**

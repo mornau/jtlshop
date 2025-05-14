@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JTL\Backend;
 
 use Carbon\Carbon;
+use DateTime;
 use JsonException;
 use JTL\DB\DbInterface;
 use JTL\Helpers\Request;
@@ -269,6 +270,7 @@ class AuthToken
         }
 
         $this->set($authCode, $token);
+        $this->resetLicenseCheckCronJob();
         \http_response_code($this->isValid() ? 200 : 404);
         exit;
     }
@@ -283,5 +285,23 @@ class AuthToken
         }
 
         return $this->decryptedToken;
+    }
+
+    public function resetLicenseCheckCronJob(): void
+    {
+        $startTime = (new DateTime('now'))->modify('+' . \random_int(0, 900) . ' minute');
+        $this->db->queryPrepared(
+            'UPDATE tcron 
+                SET startDate = :startDate,
+                    startTime = :startTime,
+                    lastStart = null,
+                    nextStart = :startDate,
+                    lastFinish = null
+                WHERE jobType = \'licensecheck\'',
+            [
+                'startDate' => $startTime->format('Y-m-d H:i:s'),
+                'startTime' => $startTime->format('H:i:s')
+            ]
+        );
     }
 }

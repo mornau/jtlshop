@@ -30,8 +30,7 @@ msgstr "Here you can adjust the transparency of the watermark (in %). We recomme
 
 msgid "brandingSizeDesc"
 msgstr "Enter the size of the watermark in proportion to the image size (in %). "
-"We recommend setting a value of 30. If you enter 0, the watermark will not be scaled at all and will be inserted "
-"in the original image size."
+"We recommend setting a value of 30."
 
 msgid "brandingFileName"
 msgstr "Watermark file"

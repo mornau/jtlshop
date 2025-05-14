@@ -39,7 +39,7 @@ msgid "validUntil"
 msgstr "Gültig bis"
 
 msgid "buttonNewCoupon"
-msgstr "Neu Coupon erstellen"
+msgstr "Neuen Coupon erstellen"
 
 msgid "newCouponDesc"
 msgstr "Bitte füllen Sie alle Felder aus, um einen neuen Coupon zu erstellen.<br/>"

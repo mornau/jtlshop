@@ -57,6 +57,23 @@
                                    name="publishTo" data-toggle="datetimepicker" data-target="#publishTo">
                         </div>
                     </div>
+                    <div id="customerVisibilities">
+                        <label>{__('restrictedToCustomerGroups')}</label>
+                        <div class="form-group">
+                            <input type="checkbox" id="checkAllCustomerGroups"
+                                   onchange="opc.gui.onChangeCheckAllCustomerGroups()">
+                            <label for="checkAllCustomerGroups">{__('allCustomerGroups')}</label>
+                        </div>
+                        <div class="d-flex flex-wrap" style="column-gap: 16px;" id="customerGroups">
+                            {foreach $opc->getCustomerGroups() as $group}
+                                <div class="form-group flex-fill">
+                                    <input type="checkbox" id="customerGroup{$group->id}" value="{$group->id}"
+                                           onchange="opc.gui.onChangeCheckCustomerGroup()">
+                                    <label for="customerGroup{$group->id}">{$group->name}</label>
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="opc-btn-secondary opc-small-btn" data-dismiss="modal"

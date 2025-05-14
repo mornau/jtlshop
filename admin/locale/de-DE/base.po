@@ -2098,6 +2098,9 @@ msgstr "Der Wert der Einstellung \"%s\" muss zwischen %d und %d liegen."
 msgid "csvImportInvalidMime"
 msgstr "Gewählte Datei hat einen ungültigen MIME-Typen"
 
+msgid "csvImportNoSourceUrl"
+msgstr "CSV enthält keine Quell-URLs."
+
 msgid "csvImportNoArtNrOrDestUrl"
 msgstr "CSV enthält weder Artikelnummern noch Ziel-URLs."
 

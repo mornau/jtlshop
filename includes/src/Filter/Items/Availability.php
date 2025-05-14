@@ -96,7 +96,6 @@ class Availability extends AbstractFilter
     public function getSQLJoin()
     {
         return (new Join())
-            ->setComment('join from FilterAvailability')
             ->setType('JOIN')
             ->setTable('tartikel AS taFA')
             ->setOn('tartikel.kArtikel = taFA.kArtikel')

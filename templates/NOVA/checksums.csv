@@ -1,5 +1,5 @@
 7884bc200549d803aca5b32b8d2a343f;Bootstrap.php
-6d4e319660e204d248680d961d676fb4;Plugins.php
+182e3f5b9a77577ced4a015b888fa861;Plugins.php
 7d2b8f3aa3cf84866ef8b949107a5f3d;account/address_form.tpl
 c48208cd25ffe91d1aa65d37958e0068;account/change_password.tpl
 ab9c586c1bb643d439e4329106c07263;account/delete_account.tpl
@@ -27,7 +27,7 @@ bd6322ab85605a5eba01da5d5c1d9746;basket/cart_dropdown_label.tpl
 95c002fe4a4fe5706598cb3f3358eb64;basket/cart_items.tpl
 eea235999183c7088a27c6a456e3c18a;basket/freegift_hint.tpl
 2b12fbd16f2e8cc735c5e1ffc4cf47a9;basket/index.tpl
-18d1f3cc604b11d0b44d635ca037b24d;blog/details.tpl
+99918e9d9c83c6235f487ef1d410d562;blog/details.tpl
 180f316fb6c39ab96eb788bcdfbab436;blog/index.tpl
 2b41983538177757fbbd3645f5f13cce;blog/overview.tpl
 2028578b439b5f12a0b6cc4cb034963d;blog/preview.tpl
@@ -350,7 +350,7 @@ f997d57c35f94dceb4809620023d97eb;snippets/uploads.tpl
 65910120a591002481ff042afdfd5156;snippets/wishlist.tpl
 1afe03a99bd2dd3f1dbd94f642efc080;snippets/wishlist_button.tpl
 4a30845d7b325c7dbbd26400e2036720;snippets/wishlist_dropdown.tpl
-f66bc9890d0cc5bd44eebed68f50a1f8;template.xml
+2e21881bba52afc4882598890d51a96c;template.xml
 33fe25bcea67528372649820a4e18956;themes/base/DataTables/datatables.min.css
 adc21077aa1c2d9a540aa8e4b6fa4756;themes/base/bootstrap-select/bootstrap-select.scss
 9a9ad62de9ec7c1ec202c8929edea23d;themes/base/bootstrap-select/variables.scss
@@ -656,7 +656,7 @@ ec9a88398efb9a17ff7c237db6f77205;themes/clear/clear.css.map
 6e98cc8bd719602250a4cfc500365486;themes/clear/sass/.sass-cache/957df4a96633951deb2cfbd54716b70eb380dc54/clear.scssc
 5ef0572f43da6a6110a6becf3b136f77;themes/clear/sass/_allstyles.scss
 7fb6892a4fc9ef6a84eb34553d859586;themes/clear/sass/_variables.scss
-c2ef0be8e211385113f8d7c1937dcc8e;themes/clear/sass/clear.scss
+b9411d1e4472c4b62339bed450b11721;themes/clear/sass/clear.scss
 585dfeafca9453894a9443216673c7d5;themes/clear/sass/clear_crit.scss
 ecbf3218c0eabfa413b81298f788ac69;themes/midnight/midnight.css
 4e00fb0b552075aa2a002bdf25480139;themes/midnight/midnight.css.map

@@ -145,7 +145,7 @@ class Join implements JoinInterface
             $on = ' ON ' . $on;
         }
         return $this->getTable() !== ''
-            ? $this->getComment() . $this->getType() . ' ' . $this->getTable() . $on
+            ? $this->getType() . ' ' . $this->getTable() . $on
             : '';
     }
 }

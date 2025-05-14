@@ -206,7 +206,7 @@ class LicenseController extends AbstractBackendController
                 $download = $helper->getDownload($itemID);
                 $result   = $installer->forceUpdate($download, $response);
             }
-            $this->cache->flushTags([\CACHING_GROUP_LICENSES]);
+            $this->cache->flushTags([\CACHING_GROUP_LICENSES, \CACHING_GROUP_RECOMMENDATIONS]);
             if ($result !== InstallCode::OK) {
                 $errorCode      = $result;
                 $mappedErrorMsg = (new PluginValidation())->map($result);
@@ -347,7 +347,9 @@ class LicenseController extends AbstractBackendController
         $code  = \trim(Request::pString('code'));
         $token = \trim(Request::pString('token'));
         $this->auth->reset($code);
-        AuthToken::getInstance($this->db)->set($code, $token);
+        $autThokenInstance = AuthToken::getInstance($this->db);
+        $autThokenInstance->set($code, $token);
+        $autThokenInstance->resetLicenseCheckCronJob();
     }
 
     /**

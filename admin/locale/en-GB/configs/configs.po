@@ -1979,76 +1979,22 @@ msgid "sonstiges_gratisgeschenk_wk_hinweis_anzeigen_desc"
 msgstr "Activate this option to show your customers a message in the basket which makes them aware that they can"
 " select a free gift."
 
-msgid "zahlungsart_ueberweisung_min_bestellungen_name"
+msgid "zahlungsart_min_bestellungen_name"
 msgstr "Number of required orders"
 
-msgid "zahlungsart_ueberweisung_min_bestellungen_desc"
+msgid "zahlungsart_min_bestellungen_desc"
 msgstr "Specify the minimum number of orders a customer must have placed to be offered this payment method."
 
-msgid "zahlungsart_ueberweisung_min_name"
+msgid "zahlungsart_min_name"
 msgstr "Minimum order value"
 
-msgid "zahlungsart_ueberweisung_min_desc"
+msgid "zahlungsart_min_desc"
 msgstr "Specify the minimum basket value required for a payment method to be available for selection."
 
-msgid "zahlungsart_ueberweisung_max_name"
+msgid "zahlungsart_max_name"
 msgstr "Maximum order value"
 
-msgid "zahlungsart_ueberweisung_max_desc"
-msgstr "Specify the basket value up to which a payment method is available for selection."
-
-msgid "zahlungsart_nachnahme_min_bestellungen_name"
-msgstr "Number of required orders"
-
-msgid "zahlungsart_nachnahme_min_bestellungen_desc"
-msgstr "Specify the minimum number of orders a customer must have placed to be offered this payment method."
-
-msgid "zahlungsart_nachnahme_min_name"
-msgstr "Minimum order value"
-
-msgid "zahlungsart_nachnahme_min_desc"
-msgstr "Specify the minimum basket value required for a payment method to be available for selection."
-
-msgid "zahlungsart_nachnahme_max_name"
-msgstr "Maximum order value"
-
-msgid "zahlungsart_nachnahme_max_desc"
-msgstr "Specify the basket value up to which a payment method is available for selection."
-
-msgid "zahlungsart_rechnung_min_bestellungen_name"
-msgstr "Number of required orders"
-
-msgid "zahlungsart_rechnung_min_bestellungen_desc"
-msgstr "Specify the minimum number of orders a customer must have placed to be offered this payment method."
-
-msgid "zahlungsart_rechnung_min_name"
-msgstr "Minimum order value"
-
-msgid "zahlungsart_rechnung_min_desc"
-msgstr "Specify the minimum basket value required for a payment method to be available for selection."
-
-msgid "zahlungsart_rechnung_max_name"
-msgstr "Maximum order value"
-
-msgid "zahlungsart_rechnung_max_desc"
-msgstr "Specify the basket value up to which a payment method is available for selection."
-
-msgid "zahlungsart_lastschrift_min_bestellungen_name"
-msgstr "Number of required orders"
-
-msgid "zahlungsart_lastschrift_min_bestellungen_desc"
-msgstr "Specify the minimum number of orders a customer must have placed to be offered this payment method."
-
-msgid "zahlungsart_lastschrift_min_name"
-msgstr "Minimum order value"
-
-msgid "zahlungsart_lastschrift_min_desc"
-msgstr "Specify the minimum basket value required for a payment method to be available for selection."
-
-msgid "zahlungsart_lastschrift_max_name"
-msgstr "Maximum order value"
-
-msgid "zahlungsart_lastschrift_max_desc"
+msgid "zahlungsart_max_desc"
 msgstr "Specify the basket value up to which a payment method is available for selection."
 
 msgid "zahlungsart_lastschrift_bic_abfrage_name"
@@ -2068,24 +2014,6 @@ msgstr "Prompt financial institution"
 
 msgid "zahlungsart_lastschrift_kreditinstitut_abfrage_desc"
 msgstr "Specify whether to prompt the financial institution."
-
-msgid "zahlungsart_barzahlung_min_bestellungen_name"
-msgstr "Number of required orders"
-
-msgid "zahlungsart_barzahlung_min_bestellungen_desc"
-msgstr "Specify the minimum number of orders a customer must have placed to be offered this payment method."
-
-msgid "zahlungsart_barzahlung_min_name"
-msgstr "Minimum order value"
-
-msgid "zahlungsart_barzahlung_min_desc"
-msgstr "Specify the minimum basket value required for a payment method to be available for selection."
-
-msgid "zahlungsart_barzahlung_max_name"
-msgstr "Maximum order value"
-
-msgid "zahlungsart_barzahlung_max_desc"
-msgstr "Specify the basket value up to which a payment method is available for selection."
 
 msgid "exportformate_lager_ueber_null_name"
 msgstr "Only items with stock over 0"
@@ -2832,7 +2760,7 @@ msgid "news_anzahl_content_desc"
 msgstr "Specify the number of blog posts to be displayed on the start page of your JTL-Shop."
 
 msgid "news_anzahl_box_name"
-msgstr "Number of months/cateogries in the box"
+msgstr "Number of months/categories in the box"
 
 msgid "news_anzahl_box_desc"
 msgstr "Specify the number of months/categories to be displayed in the \"Blog (monthly overview) / Blog "

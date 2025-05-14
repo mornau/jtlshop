@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace JTL\Console;
 
+use http\Exception\InvalidArgumentException;
 use JTL\Cache\JTLCacheInterface;
 use JTL\Console\Command\Backup\DatabaseCommand;
 use JTL\Console\Command\Backup\FilesCommand;
@@ -23,6 +24,7 @@ use JTL\Console\Command\Migration\CreateCommand;
 use JTL\Console\Command\Migration\InnodbUtf8Command;
 use JTL\Console\Command\Migration\MigrateCommand;
 use JTL\Console\Command\Migration\StatusCommand;
+use JTL\Console\Command\DataObjects\CreateDTO as CreateDTOCommand;
 use JTL\Console\Command\Model\CreateCommand as CreateModelCommand;
 use JTL\Console\Command\Plugin\CreateCommandCommand;
 use JTL\Console\Command\Plugin\CreateMigrationCommand;
@@ -32,6 +34,10 @@ use JTL\Plugin\Admin\Listing;
 use JTL\Plugin\Admin\ListingItem;
 use JTL\Plugin\Admin\Validation\LegacyPluginValidator;
 use JTL\Plugin\Admin\Validation\PluginValidator;
+use JTL\Router\Router;
+use JTL\Router\State;
+use JTL\Shop;
+use JTL\Shopsetting;
 use JTL\XMLParser;
 use JTLShop\SemVer\Version;
 use RuntimeException;
@@ -74,6 +80,19 @@ class Application extends BaseApplication
     {
         $this->devMode     = \APPLICATION_BUILD_SHA === '#DEV#';
         $this->isInstalled = \defined('BLOWFISH_KEY');
+        if ($this->isInstalled && $this->cache !== null) {
+            $this->cache->setJtlCacheConfig(
+                Shop::Container()->getDB()->selectAll('teinstellungen', 'kEinstellungenSektion', \CONF_CACHING)
+            );
+            Shop::setRouter(new Router(
+                Shop::Container()->getDB(),
+                $this->cache,
+                new State(),
+                Shop::Container()->getAlertService(),
+                Shopsetting::getInstance()->getAll()
+            ));
+        }
+
         parent::__construct('JTL-Shop', \APPLICATION_VERSION . ' - ' . ($this->devMode ? 'develop' : 'production'));
     }
 
@@ -171,7 +190,9 @@ class Application extends BaseApplication
             $cmds[] = new SASSCommand();
             $cmds[] = new ResetCommand();
             $cmds[] = new GenerateDemoDataCommand();
-            if ($this->devMode === true) {
+            $cmds[] = new CreateDTOCommand();
+
+            if ($this->devMode) {
                 $cmds[] = new CreateCommand();
             }
             if (\PLUGIN_DEV_MODE === true) {

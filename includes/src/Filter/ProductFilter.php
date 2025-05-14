@@ -1830,7 +1830,7 @@ class ProductFilter
                     $joins[]   = $filter->getSQLJoin();
                     $condition = $filter->getSQLCondition();
                     if (!empty($condition)) {
-                        $conditions[] = "\n#condition from filter " . $this->getDB()->quote($type) . "\n" . $condition;
+                        $conditions[] = "\n" . $condition;
                     }
                 }
             }
@@ -1870,8 +1870,7 @@ class ProductFilter
             if (empty($table)) {
                 $table = first($orFilters)->getTableName();
             }
-            $conditions[] = "\n#combined conditions from OR filter " . $primaryKeyRow . "\n" .
-                $table . '.kArtikel IN ' .
+            $conditions[] = "\n" . $table . '.kArtikel IN ' .
                 '(SELECT kArtikel 
                     FROM ' . $first->getTableName() . ' 
                     WHERE ' . $primaryKeyRow . ' IN (' . $values . '))';

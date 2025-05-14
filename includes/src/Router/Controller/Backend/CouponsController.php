@@ -467,7 +467,8 @@ class CouponsController extends AbstractBackendController
         $couponIDs = [];
         if ((int)$coupon->kKupon > 0) {
             // vorhandener Kupon
-            $res = $coupon->update() === -1 ? 0 : $coupon->kKupon;
+            $res         = $coupon->update() === -1 ? 0 : $coupon->kKupon;
+            $couponIDs[] = $coupon->getKupon();
         } else {
             // neuer Kupon
             $coupon->nVerwendungenBisher = 0;

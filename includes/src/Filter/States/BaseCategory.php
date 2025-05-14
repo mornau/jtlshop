@@ -80,11 +80,6 @@ class BaseCategory extends AbstractFilter
         return $this;
     }
 
-    public function getValue(): int
-    {
-        return (int)$this->value;
-    }
-
     /**
      * @inheritdoc
      */
@@ -175,7 +170,6 @@ class BaseCategory extends AbstractFilter
             ->setType('JOIN')
             ->setOrigin(__CLASS__)
             ->setTable('tkategorieartikel')
-            ->setOn('tartikel.kArtikel = tkategorieartikel.kArtikel')
-            ->setComment('JOIN from ' . __METHOD__);
+            ->setOn('tartikel.kArtikel = tkategorieartikel.kArtikel');
     }
 }

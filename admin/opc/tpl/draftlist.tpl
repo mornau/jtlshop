@@ -1,5 +1,5 @@
 {foreach $pageDrafts as $i => $draft}
-    {$draftStatus = $draft->getStatus($publicDraftKey)}
+    {$draftStatus = $draft->getStatus($publicDraftKeys)}
     <li class="opc-draft" id="opc-draft-{$draft->getKey()}" data-draft-status="{$draftStatus}"
         data-draft-name="{$draft->getName()}" data-draft-key="{$draft->getKey()}">
         <input type="checkbox" id="check-{$draft->getKey()}" onchange="opcDraftCheckboxChanged()"
@@ -44,6 +44,18 @@
                     {$draft->getPublishTo()|date_format:'d.m.Y - H:i'}
                 {/if}
             </div>
+            {if empty($draft->getCustomerGroups())}
+                <div class="opc-draft-info-line">
+                    {__('visibleForAllGroups')}
+                </div>
+            {else}
+                <div class="opc-draft-info-line">
+                    {__('restrictedTo')}:
+                    {foreach $draft->getCustomerGroups() as $groupID}
+                        <span class="opc-customer-group-name">{$opc->getCustomerGroupName($groupID)}</span>
+                    {/foreach}
+                </div>
+            {/if}
             <div class="opc-draft-actions">
                 <form method="post" action="{$opcStartUrl}">
                     <input type="hidden" name="jtl_token" value="{$adminSessionToken}">
